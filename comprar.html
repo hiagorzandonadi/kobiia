@@ -220,7 +220,7 @@
   });
   // ── compra de verdade: o servidor confere preço/cupom e cria o pagamento no Mercado Pago ──
   var API = 'https://kobi-licencas.hiagorzandonadi.workers.dev', IDS = ['basico', 'plus', 'pro'];
-  var qs = new URLSearchParams(location.search), CUPOM = (qs.get('cupom') || '').trim() || ([{ate:'2026-11-27T10:00:00-03:00',mostra:'2026-11-27T10:00:00-03:00',cupom:'BLACK30',pct:30,preco:'62,90',sub:'SÓ ATÉ AMANHÃ 10H'}].filter(function(f){return Date.now() < Date.parse(f.ate)})[0] || {}).cupom || ''; // promo por fases
+  var qs = new URLSearchParams(location.search), CUPOM = (qs.get('cupom') || '').trim() || ([{ate:'2026-11-28T15:00:00-03:00',mostra:'2026-11-28T15:00:00-03:00',cupom:'BLACK30',pct:30,preco:'62,90',sub:'SÓ ATÉ 28/11 ÀS 15H'}].filter(function(f){return Date.now() < Date.parse(f.ate)})[0] || {}).cupom || ''; // promo por fases
   fetch(API + '/kobi/precos' + (CUPOM ? '?cupom=' + encodeURIComponent(CUPOM) : ''), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
     if (!j || !j.ok) return;
     KOBI = j.kobi;
