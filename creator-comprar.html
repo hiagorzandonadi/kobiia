@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><link rel="icon" type="image/png" href="kobi-icon.png"><link rel="apple-touch-icon" href="kobi-icon.png"><meta property="og:image" content="https://hiagorzandonadi.github.io/kobi/kobi-icon.png">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comprar o Kobi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #F5F7FB; --card: #FFFFFF; --ink: #121528; --mist: #636A85; --line: #E3E7F0; --green: #3FB60F; --green-d: #2E8F08; --green-bg: #EEF9E7; --sky: #0EA5D8; --sky-bg: #E7F7FD; --warn: #B86E00; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 'Plus Jakarta Sans', system-ui, sans-serif; }
+  .top { background: var(--card); border-bottom: 1px solid var(--line); }
+  .top .in { max-width: 680px; margin: 0 auto; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 19px; }
+  .brand i { width: 34px; height: 34px; border-radius: 10px; background: #121528; display: grid; place-items: center; font-style: normal; color: #9BF35A; font-size: 14px; letter-spacing: 2px; }
+  .steps { display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700; color: var(--mist); }
+  .steps span { display: flex; align-items: center; gap: 6px; }
+  .steps b { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; background: var(--line); color: var(--mist); }
+  .steps .cur { color: var(--ink); } .steps .cur b { background: var(--ink); color: #fff; }
+  .steps i { width: 18px; height: 2px; background: var(--line); }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 22px 16px 60px; }
+  .demo { background: #FFF6E5; border: 1px solid #F3D9A6; color: var(--warn); border-radius: 12px; padding: 9px 13px; font-size: 13px; margin-bottom: 18px; }
+  .hero { margin: 0 0 18px; padding: 22px 22px 20px; border-radius: 20px; color: #fff;
+    background: radial-gradient(380px 160px at 90% 0%, #9BF35A33, transparent 70%), radial-gradient(420px 180px at 0% 120%, #5AD8FF33, transparent 70%), #121528; }
+  h1 { margin: 0 0 6px; font-size: clamp(22px, 4vw, 28px); line-height: 1.15; letter-spacing: -.01em; }
+  .sub { margin: 0; color: #C3C8DE; font-size: 14.5px; }
+  h2, .sec { display: flex; align-items: center; gap: 10px; }
+  .sec { margin: 22px 0 12px; font-size: 17px; }
+  .n { width: 26px; height: 26px; flex: none; border-radius: 50%; background: var(--ink); color: #fff; font-size: 13px; display: grid; place-items: center; }
+  .data { border-color: #CFE0F5; box-shadow: 0 12px 34px -22px #0EA5D877; }
+  .why { padding: 9px 12px; border-radius: 10px; background: var(--bg); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 20px; box-shadow: 0 6px 24px -18px #12152855; }
+  .card + .card { margin-top: 14px; }
+  h2 { margin: 0 0 14px; font-size: 17px; }
+
+  .opt { display: flex; gap: 12px; align-items: flex-start; }
+  .chk { flex: none; width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; margin-top: 2px; }
+  .chk.fixed { background: var(--green); }
+  .opt b { font-size: 16px; } .opt p { margin: 3px 0 0; color: var(--mist); font-size: 14px; }
+  .opt .price { margin-left: auto; font-weight: 800; white-space: nowrap; padding-left: 10px; }
+  .incl { list-style: none; margin: 12px 0 0 38px; padding: 0; display: grid; gap: 5px; font-size: 14px; }
+  .incl li::before { content: "✓ "; color: var(--green); font-weight: 800; }
+
+  .more { margin: 12px 0 0 38px; display: inline-flex; align-items: center; gap: 6px; border: 1.5px solid var(--line); background: #fff; border-radius: 99px; padding: 7px 14px; font: 700 13.5px 'Plus Jakarta Sans', sans-serif; color: var(--ink); cursor: pointer; }
+  .more:hover { border-color: var(--green); }
+  .more span { transition: transform .2s; } .more[aria-expanded="true"] span { transform: rotate(180deg); }
+  .feats { margin: 12px 0 0 38px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; font-size: 13.5px; padding: 12px 14px; border-radius: 12px; background: var(--bg); }
+  .feats[hidden] { display: none; }
+  .bump { border: 2px dashed #0EA5D899; background: linear-gradient(180deg, #F2FBFF, #fff); }
+  .bump.on { border-style: solid; border-color: var(--sky); }
+  .bump .opt { cursor: pointer; }
+  .bump .chk { border: 2px solid var(--sky); background: #fff; transition: background .15s; }
+  .bump .chk svg { opacity: 0; } .bump.on .chk { background: var(--sky); } .bump.on .chk svg { opacity: 1; }
+  .tag { display: inline-block; font-size: 11.5px; font-weight: 700; color: var(--sky); background: var(--sky-bg); padding: 2px 8px; border-radius: 99px; margin-left: 6px; vertical-align: 2px; }
+  .listen { margin: 12px 0 0 38px; display: inline-flex; align-items: center; gap: 8px; border: 1.5px solid var(--line); background: #fff; border-radius: 99px; padding: 6px 13px 6px 7px; font: 600 13.5px 'Plus Jakarta Sans', sans-serif; color: var(--ink); cursor: pointer; }
+  .listen span { width: 26px; height: 26px; border-radius: 50%; background: var(--sky); color: #fff; display: grid; place-items: center; font-size: 11px; }
+  .listen.playing span { animation: pl 1.2s infinite; } @keyframes pl { 50% { box-shadow: 0 0 0 6px #0EA5D833; } }
+  .packs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0 0 38px; transition: opacity .2s; }
+  .bump:not(.on) .packs { opacity: .55; }
+  .pack { position: relative; border: 1.5px solid var(--line); border-radius: 13px; padding: 12px 8px; text-align: center; cursor: pointer; background: #fff; }
+  .pack input { position: absolute; opacity: 0; }
+  .pack small { display: block; font-size: 11.5px; font-weight: 700; color: var(--mist); text-transform: uppercase; letter-spacing: .05em; }
+  .pack b { display: block; font-size: 18px; margin: 3px 0 1px; } .pack span { font-size: 12.5px; color: var(--mist); }
+  .pack .dur { display: block; margin-top: 7px; padding-top: 7px; border-top: 1px dashed var(--line); font-style: normal; font-size: 12.5px; font-weight: 700; color: var(--sky); }
+  .bump.on .pack.sel { border-color: var(--sky); background: var(--sky-bg); box-shadow: 0 0 0 3px #0EA5D822; }
+  .pack .best { position: absolute; top: -9px; left: 50%; transform: translateX(-50%); font-size: 10.5px; font-weight: 800; color: #fff; background: var(--sky); border-radius: 99px; padding: 1px 8px; white-space: nowrap; font-style: normal; }
+  .fine { margin: 12px 0 0 38px; font-size: 12.5px; color: var(--mist); }
+
+  label.f { display: block; font-size: 13px; font-weight: 600; color: var(--mist); margin-bottom: 12px; }
+  label.f input { display: block; width: 100%; margin-top: 5px; padding: 12px 13px; border: 1.5px solid var(--line); border-radius: 11px; font: inherit; color: var(--ink); background: #fff; }
+  label.f input { font-size: 16px; } /* 16px ou mais: o iPhone não dá zoom ao tocar no campo */
+  label.f input:focus { outline: none; border-color: var(--sky); box-shadow: 0 0 0 3px #0EA5D822; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .why { margin: 0; font-size: 12.5px; color: var(--mist); }
+
+  .bar { margin-top: 18px; display: flex; align-items: center; gap: 16px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px 18px; box-shadow: 0 10px 30px -20px #12152866; }
+  .bar .val small { display: block; font-size: 12.5px; color: var(--mist); }
+  .bar .val b { font-size: 24px; }
+  .go { margin-left: auto; border: 0; border-radius: 14px; padding: 15px 22px; font: 800 16px 'Plus Jakarta Sans', sans-serif; color: #fff; background: var(--green); cursor: pointer; box-shadow: 0 10px 24px -10px #3FB60FAA; white-space: nowrap; }
+  .go:hover { background: var(--green-d); }
+  .err { margin-top: 10px; text-align: center; color: #C2412D; font-weight: 600; font-size: 14px; min-height: 0; }
+  label.f input.bad { border-color: #E0533D; box-shadow: 0 0 0 3px #E0533D22; }
+  .go:disabled { opacity: .7; cursor: wait; }
+  .cupom-ok { margin: 12px 0 0 38px; padding: 8px 12px; border-radius: 10px; background: var(--green-bg); color: var(--green-d); font-weight: 700; font-size: 13.5px; }
+  .next { display: block; width: 100%; margin-top: 16px; padding: 16px; font-size: 17px; }
+  .back { border: 0; background: none; padding: 4px 0; margin: 0 0 10px; font: 700 14px 'Plus Jakarta Sans', sans-serif; color: var(--mist); cursor: pointer; }
+  .back:hover { color: var(--ink); }
+  .who { margin: 0 0 4px; padding: 12px 14px; border-radius: 14px; background: var(--card); border: 1px solid var(--line); font-size: 14px; color: var(--mist); }
+  .who b { color: var(--ink); }
+  section[hidden] { display: none; }
+  .after { margin-top: 10px; text-align: center; font-size: 13px; color: var(--mist); }
+
+  @media (max-width: 560px) {
+    .steps .lbl { display: none; }
+    .packs, .listen, .fine, .incl, .more, .feats { margin-left: 0; } .feats { grid-template-columns: 1fr; } .packs { gap: 7px; } .pack b { font-size: 15.5px; }
+    .row { grid-template-columns: 1fr; }
+    .bar { position: sticky; bottom: 8px; gap: 10px; padding: 10px 10px 10px 14px; border-radius: 16px; }
+    .bar .val small { display: none; } .bar .val b { font-size: 19px; white-space: nowrap; }
+    .go { padding: 13px 14px; font-size: 14.5px; }
+    .data .why { margin-bottom: 0; }
+  }
+  #bump { padding: 16px; } #bump .opt p { font-size: 13px; }
+  #bump .listen { margin-top: 8px; padding: 4px 11px 4px 5px; font-size: 12.5px; } #bump .listen span { width: 22px; height: 22px; }
+  #bump .packs { margin-top: 10px; gap: 8px; } #bump .pack { padding: 9px 6px; } #bump .pack b { font-size: 16px; margin: 1px 0 0; }
+  #bump .pack .dur { margin-top: 5px; padding-top: 5px; font-size: 11.5px; } #bump .fine { margin-top: 8px; font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="top"><div class="in">
+  <div class="brand"><i>• •</i>Kobi</div>
+  <div class="steps"><span class="cur" id="st1"><b>1</b><em class="lbl" style="font-style:normal">Seus dados</em></span><i></i><span id="st2"><b>2</b><em class="lbl" style="font-style:normal">Seu pedido</em></span><i></i><span><b>3</b><em class="lbl" style="font-style:normal">Pagamento</em></span></div>
+</div></div>
+
+<div class="wrap">
+<div id="bfTop" hidden style="margin:0 0 16px;padding:12px 16px;border-radius:16px;background:#050505;border:1px solid #f5c54266;color:#fff;font-weight:700;text-align:center;box-shadow:0 10px 24px -14px #000">
+ <span style="font-weight:900;letter-spacing:.06em;background:linear-gradient(180deg,#fff3c4,#f5c542 50%,#c9901b);-webkit-background-clip:text;background-clip:text;color:transparent">🖤 BLACK FRIDAY</span>
+ · <span style="color:#ffe08a">30% OFF em tudo, já aplicado</span><br><span style="font-size:13px;color:#ddd">⏰ Termina 30/11, à meia-noite</span></div>
+<section id="s1">
+  <div class="hero">
+    <h1>Falta pouco para o Kobi chegar no seu PC</h1>
+    <p class="sub">Preencha seus dados para continuar.</p>
+  </div>
+
+  <div class="card data">
+    <h2>Seus dados</h2>
+    <label class="f">Nome completo<input id="fNome" autocomplete="name" placeholder="Como você se chama?" maxlength="80"></label>
+    <div class="row">
+      <label class="f">E-mail<input id="fEmail" type="email" autocomplete="email" inputmode="email" placeholder="voce@email.com" maxlength="120"></label>
+      <label class="f">Celular (WhatsApp)<input id="fCel" type="tel" autocomplete="tel" inputmode="tel" placeholder="(00) 00000-0000" maxlength="20"></label>
+    </div>
+    <p class="why">🔑 É com esse e-mail que você ativa o Kobi. Seus dados já vão preenchidos para o pagamento.</p>
+  </div>
+  <button class="go next" type="button" id="next">Próximo →</button>
+  <div class="err" id="err1" role="alert"></div>
+</section>
+
+<section id="s2" hidden>
+  <button class="back" type="button" id="back">← Voltar e editar meus dados</button>
+  <div class="who" id="who"></div>
+  <h3 class="sec">O que você recebe</h3>
+
+  <div class="card">
+    <div class="opt">
+      <span class="chk fixed"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div><b>Kobi · acesso vitalício</b><p>Windows, Mac e Linux · pagamento único</p></div>
+      <span class="price" id="pKobi">R$ 89,90</span>
+    </div>
+    <ul class="incl">
+      <li>Todas as funções, para sempre</li>
+      <li>Inteligência artificial gratuita</li>
+      <li>Todas as atualizações</li>
+      <li>Várias vozes grátis</li>
+    </ul>
+    <button class="more" id="more" type="button" aria-expanded="false">Ver mais funcionalidades <span>▾</span></button>
+    <div class="feats" id="feats" hidden>
+      <span>🎥 Gravador de tela</span><span>📥 Baixe arquivos e vídeos só arrastando e soltando no entalhe</span>
+      <span>🎙 Voz que funciona sem internet ("Ei, Kobi")</span><span>📱 Controle pelo celular, por QR Code</span>
+      <span>🎵 Spotify no topo da tela</span><span>✅ Tarefas, lembretes e alarmes</span>
+      <span>⏱ Timers e modo foco</span><span>💧 Hábitos e bem-estar</span>
+      <span>📋 Copiados, notas e textos rápidos</span><span>🧩 Widgets na área de trabalho</span>
+      <span>🤖 Claude Code e Codex pelo Kobi</span><span>🧠 Memória inteligente</span>
+      <span>🌌 Modo imersivo</span><span>⚡ Deixa o PC mais rápido</span>
+      <span>🗣 Vários pedidos de uma vez</span><span>🔌 Conexões com seus apps</span>
+      <span>🎙 Segurar para falar</span><span>🤫 Modo só executar</span>
+      <span>🎨 13 expressões, cores e 12 acessórios</span><span>💻 Windows, Mac e Linux</span>
+    </div>
+  </div>
+
+  <h3 class="sec">Deseja incluir extras opcionais?</h3>
+  <div class="card bump" id="bump">
+    <div class="opt" id="bumpHead" role="checkbox" aria-checked="false" tabindex="0">
+      <span class="chk"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div><b>Adicionar a voz do J.A.R.V.I.S.</b><span class="tag">extra opcional</span>
+        <p>Voz realista no estilo dos filmes, já ativada no seu Kobi.</p></div>
+    </div>
+    <button class="listen" id="listen" type="button"><span>▶</span>Ouvir a voz</button>
+    <div class="packs" id="packs">
+      <label class="pack"><input type="radio" name="pk" value="0"><small>Básico</small><b>R$ 49,90</b><span>1.000 respostas</span><i class="dur">⏱ dura 2 meses e 6 dias</i></label>
+      <label class="pack sel"><input type="radio" name="pk" value="1" checked><em class="best">mais escolhido</em><small>Plus</small><b>R$ 89,90</b><span>2.000 respostas</span><i class="dur">⏱ dura 4 meses e 12 dias</i></label>
+      <label class="pack"><input type="radio" name="pk" value="2"><small>Pro</small><b>R$ 169,90</b><span>4.000 respostas</span><i class="dur">⏱ dura 8 meses e 24 dias</i></label>
+    </div>
+    <div class="fine">Tempo calculado pelo uso médio. O crédito não expira e não tem mensalidade.</div>
+  </div>
+
+  <div class="card bump" id="bump2" style="margin-top:14px">
+    <div class="opt" id="bump2Head" role="checkbox" aria-checked="false" tabindex="0">
+      <span class="chk"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div><b>🚀 Acesso Antecipado às novidades</b><span class="tag">extra opcional</span>
+        <p>Receba as funções novas que estamos desenvolvendo antes de todo mundo, assim que cada uma fica pronta pra teste.</p></div>
+      <span class="price">+ R$ 32,90</span>
+    </div>
+  </div>
+
+  <div class="bar">
+    <div class="val"><small id="valLbl">Kobi</small><b id="tot">R$ 89,90</b></div>
+    <button class="go" type="button" id="go">Ir para o pagamento →</button>
+  </div>
+  <div class="err" id="err" role="alert"></div>
+  <div class="after">Na próxima tela você escolhe <b>PIX</b> ou <b>cartão em até 12x</b>. O link para baixar chega no seu e-mail.</div>
+</section>
+</div>
+
+<script>
+(function () {
+  var BF = Date.now() < Date.parse('2026-12-01T00:00:00-03:00'), BFX = BF ? 0.7 : 1;
+  var KOBI = 89.90, PACKS = [{ n: 'Básico', p: 49.90 }, { n: 'Plus', p: 89.90 }, { n: 'Pro', p: 169.90 }];
+  var on = false, pk = 1;
+  var $ = function (id) { return document.getElementById(id); };
+  function brl(v) { return 'R$ ' + v.toFixed(2).replace('.', ','); }
+  var render = function () {
+    $('bump').classList.toggle('on', on); $('bumpHead').setAttribute('aria-checked', on);
+    $('tot').textContent = brl(KOBI + (on ? PACKS[pk].p : 0));
+    $('valLbl').textContent = on ? 'Kobi + voz do J.A.R.V.I.S. (' + PACKS[pk].n + ')' : 'Kobi';
+  };
+  function toggle() { on = !on; render(); }
+  $('more').addEventListener('click', function () {
+    var open = $('feats').hidden; $('feats').hidden = !open; this.setAttribute('aria-expanded', open);
+    this.firstChild.textContent = open ? 'Ver menos ' : 'Ver mais funcionalidades ';
+  });
+  $('bumpHead').addEventListener('click', toggle);
+  $('bumpHead').addEventListener('keydown', function (e) { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); } });
+  [].forEach.call(document.querySelectorAll('.pack'), function (l) {
+    l.querySelector('input').addEventListener('click', function () {
+      pk = +this.value;
+      [].forEach.call(document.querySelectorAll('.pack'), function (x) { x.classList.toggle('sel', x === l); });
+      on = true; render();
+    });
+  });
+  var au = new Audio(), si = 0, SAMPLES = ['audio/jarvis-1.mp3', 'audio/jarvis-2.mp3', 'audio/jarvis-3.mp3', 'audio/jarvis-4.mp3'];
+  au.addEventListener('ended', function () { $('listen').classList.remove('playing'); $('listen').lastChild.textContent = 'Ouvir outra fala'; });
+  $('listen').addEventListener('click', function () {
+    var b = $('listen');
+    if (b.classList.contains('playing')) { au.pause(); b.classList.remove('playing'); return; }
+    au.src = SAMPLES[si]; si = (si + 1) % SAMPLES.length; b.classList.add('playing'); b.lastChild.textContent = 'Tocando…';
+    var p = au.play(); if (p && p.catch) p.catch(function () { b.classList.remove('playing'); });
+  });
+  // ── compra pela Cakto com o link de afiliado: cada combinação é uma oferta do Kobi na Cakto ──
+  var KC = (new URLSearchParams(location.search).get('c') || '').toLowerCase().replace(/[^a-z0-9-]/g, ''), AFF = '', ANT = 32.90, ant = false;
+  var AFFP = fetch('https://kobi-licencas.hiagorzandonadi.workers.dev/creators/pagina?c=' + encodeURIComponent(KC)).then(function (r) { return r.json(); }).then(function (j) { if (j && j.ok) AFF = j.aff; }).catch(function () {});
+  var LINKS = { 'n': 'kojjksr_1325563', '0': '3f7hogg', '1': '3a8cw28', '2': '3fdmdiy', 'nA': 'cfehuzd', '0A': 'wofh86t', '1A': 'fe8uyyc', '2A': '34ywn6p' };
+  function chave() { return (on ? String(pk) : 'n') + (ant ? 'A' : ''); }
+  var render0 = render;
+  render = function () {
+    render0();
+    $('bump2').classList.toggle('on', ant); $('bump2Head').setAttribute('aria-checked', ant);
+    $('tot').textContent = brl((KOBI + (on ? PACKS[pk].p : 0) + (ant ? ANT : 0)) * BFX);
+    if (BF) $('valLbl').textContent += ' · Black Friday -30%';
+    $('valLbl').textContent = 'Kobi' + (on ? ' + voz do J.A.R.V.I.S. (' + PACKS[pk].n + ')' : '') + (ant ? ' + Acesso Antecipado' : '');
+  };
+  function toggle2() { ant = !ant; render(); }
+  $('bump2Head').addEventListener('click', toggle2);
+  $('bump2Head').addEventListener('keydown', function (e) { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle2(); } });
+  $('go').addEventListener('click', function () {
+    try { if (window.fbq) fbq('track', 'InitiateCheckout', { value: KOBI + (on ? PACKS[pk].p : 0) + (ant ? ANT : 0), currency: 'BRL' }); } catch (e) {}
+    var nome = $('fNome').value.trim(), email = $('fEmail').value.trim(), cel = $('fCel').value.replace(/\D/g, '');
+    if (nome.length < 2 || !/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(email)) { passo(1); return; }
+    var b = $('go'); b.disabled = true; b.textContent = 'Abrindo o pagamento…';
+    AFFP.then(function () {
+      var q = '?' + (AFF ? 'affiliate=' + encodeURIComponent(AFF) + '&' : '') + (BF ? 'coupon=black30&' : '') + 'name=' + encodeURIComponent(nome) + '&email=' + encodeURIComponent(email) + (cel ? '&phone=' + encodeURIComponent(cel) : '');
+      location.href = 'https://pay.cakto.com.br/' + LINKS[chave()] + q;
+    });
+  });
+  window.addEventListener('pageshow', function () { var b = $('go'); b.disabled = false; b.textContent = 'Ir para o pagamento →'; });
+  // ── dois passos: 1) dados  2) o que você recebe + extra opcional + pagamento ──
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return '&#' + c.charCodeAt(0) + ';'; }); }
+  function passo(n) {
+    $('s1').hidden = n !== 1; $('s2').hidden = n !== 2;
+    $('st1').classList.toggle('cur', n === 1); $('st2').classList.toggle('cur', n === 2);
+    window.scrollTo(0, 0);
+  }
+  function erro1(m, el) { $('err1').textContent = m; if (el) { el.focus(); el.classList.add('bad'); } }
+  $('next').addEventListener('click', function () {
+    var nome = $('fNome').value.trim(), email = $('fEmail').value.trim();
+    if (nome.length < 2) return erro1('Digite seu nome completo.', $('fNome'));
+    if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(email)) return erro1('Confira o seu e-mail: é com ele que você ativa o Kobi.', $('fEmail'));
+    $('err1').textContent = '';
+    $('who').innerHTML = 'Para <b>' + esc(nome) + '</b> · ' + esc(email) + ($('fCel').value.trim() ? ' · ' + esc($('fCel').value.trim()) : '');
+    passo(2);
+  });
+  [].forEach.call(document.querySelectorAll('#s1 input'), function (i) { i.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); $('next').click(); } }); });
+  $('back').addEventListener('click', function () { passo(1); });
+  function erro(m, el) { if (el && el.closest('#s1')) { passo(1); return erro1(m, el); } $('err').textContent = m; if (el) { el.focus(); el.classList.add('bad'); } }
+  [].forEach.call(document.querySelectorAll('label.f input'), function (i) { i.addEventListener('input', function () { i.classList.remove('bad'); $('err').textContent = ''; $('err1').textContent = ''; }); });
+  if (BF) { $('bfTop').hidden = false; $('pKobi').innerHTML = '<s style="color:var(--mist);font-weight:600">R$ 89,90</s> R$ 62,93'; }
+  render();
+})();
+</script>
+</body>
+</html>

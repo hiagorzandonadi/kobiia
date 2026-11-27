@@ -1,0 +1,976 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0D0E1A">
+<title>Kobi</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Kobi: o assistente que mora no topo da tela do seu PC. Fala com você, toca suas músicas e cuida do seu dia. Pagamento único de R$ 89,90, sem mensalidade e com IA grátis.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  /* Layout: uma mesa de trabalho à noite. O entalho do Kobi é o herói e pode ser usado de verdade; a página desce como a área de trabalho. */
+  :root {
+    --night: #0D0E1A; --dusk: #161829; --dusk-2: #1F2238; --line: rgba(196, 205, 245, .12);
+    --ink: #F1F3FF; --mist: #A6ACCB; --glow: #9BF35A; --lavender: #BFCDF5; --sky: #5AD8FF; --rose: #FF7AC8; --warn: #FFB340;
+    --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --font-body: "Figtree", "Segoe UI", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--night); color: var(--ink); font: 400 16px/1.6 var(--font-body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  a { color: inherit; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  h1, h2, h3 { font-family: var(--font-display); letter-spacing: -.025em; text-wrap: balance; margin: 0; }
+  p { margin: 0; }
+  :focus-visible { outline: 2px solid var(--glow); outline-offset: 3px; border-radius: 8px; }
+
+  .nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--night) 84%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 21; background: var(--night); }
+  .nav .wrap { display: flex; align-items: center; gap: 16px; padding-block: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; font: 800 22px var(--font-display); text-decoration: none; }
+  .nav nav { display: flex; gap: 22px; margin-left: auto; font-weight: 600; font-size: 14.5px; color: var(--mist); }
+  .nav nav a { text-decoration: none; } .nav nav a:hover { color: var(--ink); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: 700 15px var(--font-body); text-decoration: none; padding: 12px 20px; border-radius: 14px; cursor: pointer; transition: transform .15s, box-shadow .2s, background .2s; }
+  .btn-primary { background: var(--glow); color: #10140a; box-shadow: 0 8px 28px rgba(155, 243, 90, .25); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 34px rgba(155, 243, 90, .35); }
+  .btn-ghost { background: var(--dusk-2); color: var(--ink); } .btn-ghost:hover { background: #282c48; }
+  .nav .btn { padding: 9px 16px; font-size: 14px; }
+
+  .hero { padding-block: 60px 30px; text-align: center; }
+  .eyebrow { font: 500 13px var(--font-mono); color: var(--glow); letter-spacing: .04em; }
+  .hero h1 { font-size: clamp(42px, 7.2vw, 84px); line-height: .98; font-weight: 800; margin-top: 14px; }
+  .hero h1 em { font-style: normal; color: var(--lavender); }
+  .hero .lead { max-width: 620px; margin: 20px auto 0; font-size: 18.5px; color: var(--mist); }
+  .hero .ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
+  .price-note { margin-top: 14px; font-size: 13.5px; color: var(--mist); } .price-note b { color: var(--ink); }
+
+  /* área de trabalho de demonstração */
+  .desk { position: relative; margin: 44px auto 0; max-width: 1000px; aspect-ratio: 16 / 9.4; min-height: 420px; border-radius: 22px; overflow: hidden; border: 1px solid var(--line);
+    background: radial-gradient(70% 60% at 70% 110%, #3b2a5c 0%, transparent 60%), radial-gradient(60% 60% at 15% 100%, #1b3b4e 0%, transparent 60%), linear-gradient(180deg, #1a1d36 0%, #2a2448 55%, #3a2b52 100%);
+    box-shadow: 0 40px 100px rgba(0, 0, 0, .5); text-align: left; }
+  .desk::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 36%; background: linear-gradient(170deg, transparent 0 34%, #231c3d 35%), linear-gradient(195deg, transparent 0 40%, #1b1631 41%); pointer-events: none; }
+  .taskbar { position: absolute; left: 0; right: 0; bottom: 0; height: 30px; background: rgba(10, 11, 22, .82); display: flex; align-items: center; justify-content: center; gap: 8px; z-index: 2; }
+  .taskbar i { width: 18px; height: 18px; border-radius: 5px; background: rgba(255, 255, 255, .14); } .taskbar i:first-child { background: var(--sky); opacity: .8; }
+  .widget { position: absolute; z-index: 1; border-radius: 16px; background: rgba(22, 24, 41, .82); border: 1px solid var(--line); padding: 12px 14px; }
+  .w-clock { right: 3%; bottom: 14%; } .w-clock b { display: block; font: 700 30px var(--font-display); letter-spacing: -.03em; font-variant-numeric: tabular-nums; } .w-clock span { font-size: 12px; color: var(--mist); }
+  .w-water { left: 3%; bottom: 14%; display: flex; gap: 10px; align-items: center; } .w-water b { font: 700 22px var(--font-display); } .w-water span { font-size: 12px; color: var(--mist); display: block; }
+  .desk-hint { position: absolute; top: 46%; left: 50%; transform: translate(-50%, -50%); z-index: 1; font: 500 13px var(--font-mono); color: rgba(241, 243, 255, .55); text-align: center; transition: opacity .3s; pointer-events: none; }
+  .desk.active .desk-hint { opacity: 0; }
+
+  /* o entalho */
+  .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 3; background: #000; border-radius: 0 0 18px 18px; width: var(--w, 210px); height: 40px; overflow: hidden;
+    transition: width .5s cubic-bezier(.3, 1.25, .4, 1), height .5s cubic-bezier(.3, 1.15, .4, 1), border-radius .4s; box-shadow: 0 6px 26px rgba(0, 0, 0, .45), 0 0 18px rgba(155, 243, 90, .18); }
+  .notch.open { width: min(800px, 96%); height: min(470px, 92%); border-radius: 0 0 28px 28px; }
+  .pill { position: absolute; inset: 0 0 auto; height: 40px; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 0 16px; transition: opacity .2s; cursor: pointer; }
+  .notch.open .pill { opacity: 0; pointer-events: none; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--glow); box-shadow: 0 0 10px var(--glow); flex: none; }
+  .live { font: 700 13.5px var(--font-body); color: var(--glow); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 7px; font-variant-numeric: tabular-nums; }
+  .live .nm { color: var(--mist); font-weight: 600; }
+  .eq { display: inline-flex; gap: 2px; align-items: flex-end; height: 12px; } .eq b { width: 3px; background: #1ED760; border-radius: 2px; animation: eq .9s ease-in-out infinite; }
+  .eq b:nth-child(2) { animation-delay: -.3s; } .eq b:nth-child(3) { animation-delay: -.6s; } @keyframes eq { 0%, 100% { height: 3px; } 50% { height: 12px; } }
+  .panel { position: absolute; inset: 0; display: grid; grid-template-columns: 170px 1fr; gap: 16px; padding: 18px 20px 18px 14px; opacity: 0; pointer-events: none; transition: opacity .25s .12s; }
+  .notch.open .panel { opacity: 1; pointer-events: auto; }
+  .side { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .me { display: flex; align-items: center; gap: 10px; margin: 0 4px 10px; } .me b { display: block; font: 700 16px var(--font-display); } .me small { font: 500 11px var(--font-mono); color: var(--mist); }
+  .lv { display: flex; align-items: center; gap: 6px; margin-top: 3px; } .lv em { font: 800 10px var(--font-body); font-style: normal; color: #FFD25A; }
+  .lv i { width: 54px; height: 5px; border-radius: 4px; background: rgba(255, 255, 255, .12); overflow: hidden; display: block; } .lv i b { display: block; height: 100%; background: linear-gradient(90deg, #FFD25A, #FF9F0A); transition: width .4s; }
+  .nv { display: flex; align-items: center; gap: 9px; padding: 7px 9px; border-radius: 11px; font-size: 13.5px; font-weight: 600; color: var(--mist); text-align: left; }
+  .nv:hover { background: rgba(255, 255, 255, .06); color: var(--ink); } .nv.on { background: rgba(155, 243, 90, .14); color: var(--glow); }
+  .nv .c { margin-left: auto; font-size: 10.5px; background: rgba(255, 255, 255, .1); color: var(--ink); padding: 1px 6px; border-radius: 8px; }
+  .main { min-width: 0; display: flex; flex-direction: column; overflow: hidden; }
+  .main h4 { margin: 0; font: 800 21px var(--font-display); letter-spacing: -.02em; }
+  .main .sub { color: var(--mist); font-size: 12.5px; margin: 1px 0 10px; }
+  .ask { display: flex; gap: 6px; align-items: center; background: #141416; border: 1px solid rgba(255, 255, 255, .08); border-radius: 22px; padding: 4px 4px 4px 14px; }
+  .ask span { flex: 1; color: rgba(255, 255, 255, .4); font-size: 13.5px; }
+  .mic { width: 32px; height: 32px; border-radius: 50%; background: var(--glow); color: #000; display: grid; place-items: center; }
+  .mic svg { width: 16px; height: 16px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .chip { padding: 5px 10px; border-radius: 14px; background: rgba(255, 255, 255, .08); font-size: 12px; font-weight: 700; } .chip:hover { background: rgba(155, 243, 90, .2); color: var(--glow); }
+  .convo { margin-top: 10px; flex: 1; min-height: 0; overflow: auto; background: #141416; border: 1px solid rgba(255, 255, 255, .07); border-radius: 14px; padding: 9px 11px; display: flex; flex-direction: column; gap: 6px; }
+  .convo::-webkit-scrollbar { width: 0; }
+  .m { max-width: 86%; font-size: 13px; line-height: 1.35; padding: 6px 10px; border-radius: 12px; } .m.u { align-self: flex-end; background: rgba(155, 243, 90, .2); } .m.k { align-self: flex-start; background: #1f1f25; }
+  .row { display: flex; align-items: center; gap: 10px; padding: 8px 11px; background: #141416; border: 1px solid rgba(255, 255, 255, .07); border-radius: 12px; margin-bottom: 6px; font-size: 13.5px; font-weight: 600; }
+  .row .t { flex: 1; min-width: 0; } .row .t small { display: block; color: var(--mist); font-weight: 500; font-size: 11.5px; }
+  .ck { width: 19px; height: 19px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .35); flex: none; transition: all .15s; } .ck.on { background: var(--glow); border-color: var(--glow); }
+  .row.done .t { color: var(--mist); text-decoration: line-through; }
+  .rb { width: 28px; height: 28px; border-radius: 50%; background: rgba(255, 255, 255, .08); font-weight: 800; flex: none; } .rb.plus { background: rgba(155, 243, 90, .2); color: var(--glow); }
+  .bar { height: 5px; border-radius: 4px; background: rgba(255, 255, 255, .1); overflow: hidden; margin-top: 4px; } .bar i { display: block; height: 100%; background: var(--glow); transition: width .3s; }
+  .tm { font: 800 20px var(--font-display); font-variant-numeric: tabular-nums; }
+  .hmid { display: flex; gap: 10px; flex: 1; min-height: 0; margin-top: 10px; } .hmid .convo { margin-top: 0; }
+  .mini { width: 210px; flex: none; align-self: flex-start; background: linear-gradient(160deg, #1b2a14, #111114 70%); border: 1px solid rgba(255, 255, 255, .07); border-radius: 14px; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+  .mini .top { display: flex; gap: 9px; align-items: center; min-width: 0; } .mini .art { width: 40px; height: 40px; border-radius: 9px; flex: none; display: grid; place-items: center; font-size: 16px; }
+  .mini b { display: block; font: 800 13px var(--font-display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .mini small { color: var(--mist); font-size: 11.5px; }
+  .mini .pbar { height: 4px; border-radius: 3px; background: rgba(255, 255, 255, .12); overflow: hidden; } .mini .pbar i { display: block; height: 100%; background: var(--glow); width: 40%; transition: width 1s linear; }
+  .mini .ctl { margin-top: 0; justify-content: space-between; } .mini .ctl button { width: 30px; height: 30px; font-size: 11px; } .mini .ctl button.pp { width: 36px; height: 36px; }
+  .vrow { display: flex; align-items: center; gap: 7px; font-size: 12px; } .vrow input { flex: 1; -webkit-appearance: none; appearance: none; height: 5px; border-radius: 9px; background: linear-gradient(90deg, var(--glow) var(--p, 60%), rgba(255, 255, 255, .14) var(--p, 60%)); outline: 0; }
+  .vrow input::-webkit-slider-thumb { -webkit-appearance: none; width: 13px; height: 13px; border-radius: 50%; background: #fff; } .vrow input::-moz-range-thumb { width: 13px; height: 13px; border: 0; border-radius: 50%; background: #fff; }
+  .vrow em { font-style: normal; color: var(--mist); width: 30px; text-align: right; font-variant-numeric: tabular-nums; }
+  .live.work { color: #FFD25A; } .live.work .wk { display: inline-block; animation: wkb .9s ease-in-out infinite; } @keyframes wkb { 50% { transform: translateY(-2px) rotate(-12deg); } }
+  .gen { width: 84px; height: 84px; border-radius: 12px; margin-top: 6px; background: radial-gradient(circle at 50% 38%, #fff 0 9%, transparent 10%), radial-gradient(circle at 50% 46%, #c9d6ff 0 22%, transparent 23%), radial-gradient(circle at 30% 80%, #ffb3e6 0 6%, transparent 7%), radial-gradient(circle at 75% 20%, #fff8 0 2%, transparent 3%), radial-gradient(circle at 20% 25%, #fff8 0 2%, transparent 3%), linear-gradient(160deg, #2b1a5a, #0d1440); }
+  @media (max-width: 720px) { .hmid { flex-direction: column; } .mini { width: auto; } }
+  .player { display: flex; gap: 14px; align-items: center; }
+  .player .art { width: 92px; height: 92px; border-radius: 14px; flex: none; display: grid; place-items: center; font-size: 34px; }
+  .player b { display: block; font: 800 17px var(--font-display); } .player span { color: var(--mist); font-size: 13px; }
+  .ctl { display: flex; gap: 8px; margin-top: 10px; } .ctl button { width: 36px; height: 36px; border-radius: 50%; background: rgba(255, 255, 255, .08); font-size: 13px; } .ctl button.pp { background: #fff; color: #000; }
+  .say-kobi { position: absolute; left: 50%; top: 56px; transform: translateX(-50%); z-index: 2; background: rgba(0, 0, 0, .85); border: 1px solid var(--line); padding: 8px 14px; border-radius: 14px; font-size: 13px; font-weight: 600; opacity: 0; transition: opacity .3s; pointer-events: none; white-space: nowrap; }
+
+  section { padding-block: 72px; }
+  .sec-head { max-width: 680px; }
+  .sec-head h2 { font-size: clamp(32px, 4.6vw, 50px); line-height: 1.04; font-weight: 800; }
+  .sec-head p { margin-top: 14px; color: var(--mist); font-size: 17px; }
+  .center { margin: 0 auto; text-align: center; }
+
+  .pills { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .pills span { font: 500 14px var(--font-mono); background: var(--dusk); border: 1px solid var(--line); padding: 9px 14px; border-radius: 999px; }
+  .pills span::before { content: "“"; color: var(--glow); } .pills span::after { content: "”"; color: var(--glow); }
+
+  .alt { margin-top: 44px; display: grid; gap: 56px; }
+  .alt-row { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: center; }
+  .alt-row:nth-child(even) .mock { order: -1; }
+  .alt-row h3 { font-size: 30px; font-weight: 800; line-height: 1.08; }
+  .alt-row p { margin-top: 12px; color: var(--mist); font-size: 16.5px; }
+  .alt-row ul { margin: 14px 0 0; padding-left: 18px; color: var(--mist); display: grid; gap: 4px; }
+  .mock { background: var(--dusk); border: 1px solid var(--line); border-radius: 22px; padding: 22px; min-height: 220px; display: grid; place-items: center; position: relative; overflow: hidden; }
+  .mock .bub { background: #000; border-radius: 0 0 24px 24px; padding: 14px 20px; display: flex; gap: 12px; align-items: center; max-width: 420px; width: 100%; }
+  .mock .bub small { font: 700 10.5px var(--font-mono); color: var(--glow); letter-spacing: .06em; text-transform: uppercase; }
+  .mock .bub p { font-weight: 600; font-size: 14.5px; }
+  .lvl { display: flex; gap: 3px; align-items: center; height: 22px; margin-left: auto; } .lvl i { width: 4px; border-radius: 3px; background: #FF453A; animation: lv .8s ease-in-out infinite; }
+  @keyframes lv { 0%, 100% { height: 5px; } 50% { height: 20px; } }
+  .phone { width: 190px; border-radius: 26px; background: #000; border: 6px solid #26283d; padding: 14px 12px; }
+  .phone h5 { margin: 0 0 8px; font: 800 15px var(--font-display); } .phone .pi { font-size: 12px; padding: 7px 9px; border-radius: 9px; background: #17171c; margin-bottom: 5px; }
+  .qr { width: 110px; height: 110px; border-radius: 12px; background: #fff; padding: 8px; display: grid; grid-template-columns: repeat(9, 1fr); gap: 1px; }
+  .qr i { background: #0b0b10; border-radius: 1px; } .qr i.o { background: transparent; }
+
+  .feat-grid { margin-top: 34px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
+  .feat { background: var(--night); padding: 22px; min-width: 0; } .feat h3 { font-size: 18px; font-weight: 700; } .feat p { margin-top: 6px; color: var(--mist); font-size: 14.5px; }
+
+  .moods { margin-top: 34px; display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; }
+  .mood { background: var(--dusk); border: 1px solid var(--line); border-radius: 18px; padding: 16px 6px 12px; text-align: center; }
+  .mood span { display: block; margin-top: 6px; font-size: 13px; font-weight: 600; color: var(--mist); }
+  .mood .kobi { margin: 0 auto; }
+  .wardrobe { margin-top: 14px; display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; }
+
+  .stats { margin-top: 34px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .stat { background: var(--dusk); border: 1px solid var(--line); border-radius: 20px; padding: 22px; }
+  .stat b { display: block; font: 800 46px/1 var(--font-display); letter-spacing: -.04em; color: var(--glow); }
+  .stat span { display: block; margin-top: 10px; color: var(--mist); font-size: 14.5px; }
+  .guarantees { margin-top: 22px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 26px; padding: 0; list-style: none; }
+  .guarantees li { display: flex; gap: 10px; color: var(--mist); } .guarantees li::before { content: "✓"; color: var(--glow); font-weight: 800; }
+
+  .install { margin-top: 34px; display: grid; grid-template-columns: 1.3fr 1fr; gap: 28px; align-items: start; }
+  .steps { list-style: none; counter-reset: s; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 38px 1fr; gap: 12px; background: var(--dusk); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; }
+  .steps li::before { content: counter(s); width: 32px; height: 32px; border-radius: 50%; background: rgba(155, 243, 90, .14); color: var(--glow); display: grid; place-items: center; font: 800 15px var(--font-display); }
+  .steps b { display: block; } .steps span { color: var(--mist); font-size: 14.5px; }
+  .reqs { display: grid; gap: 10px; }
+  .req { background: var(--dusk); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; } .req small { font: 500 12px var(--font-mono); color: var(--mist); } .req b { display: block; font-size: 15.5px; margin-top: 2px; }
+  .warn { background: rgba(255, 179, 64, .08); border: 1px solid rgba(255, 179, 64, .35); border-radius: 16px; padding: 14px 16px; color: #FFD9A0; font-size: 14.5px; }
+  .warn b { color: var(--warn); }
+
+  .pricing { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; }
+  .ticket { position: relative; background: linear-gradient(160deg, #1d2136, #151728); border: 1px solid var(--line); border-radius: 26px; padding: 34px; box-shadow: 0 30px 80px rgba(0, 0, 0, .35); }
+  .ticket::before { content: ""; position: absolute; inset: -1px; border-radius: 26px; padding: 1px; background: linear-gradient(140deg, var(--glow), transparent 40%, transparent 70%, var(--sky)); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+  .ticket .tag { font: 500 12.5px var(--font-mono); color: var(--glow); }
+  .amount { display: flex; align-items: baseline; gap: 6px; margin-top: 10px; font-family: var(--font-display); }
+  .amount small { font-size: 26px; font-weight: 700; color: var(--mist); } .amount b { font-size: 92px; font-weight: 800; line-height: 1; letter-spacing: -.05em; }
+  .once { color: var(--mist); font-size: 15px; margin-top: 4px; }
+  .ticket ul { list-style: none; padding: 0; margin: 22px 0 26px; display: grid; gap: 10px; }
+  .ticket li { display: flex; gap: 10px; font-size: 15px; } .ticket li::before { content: "✓"; color: var(--glow); font-weight: 800; }
+  .ticket .btn { width: 100%; font-size: 17px; padding: 16px; }
+  .fine { margin-top: 12px; text-align: center; font-size: 13px; color: var(--mist); }
+  .specs { display: grid; gap: 14px; margin: 0; }
+  .spec { display: grid; grid-template-columns: 130px 1fr; gap: 12px; padding-bottom: 14px; border-bottom: 1px solid var(--line); font-size: 15px; }
+  .spec dt { color: var(--mist); } .spec dd { margin: 0; }
+
+  .faq { margin-top: 30px; display: grid; gap: 10px; max-width: 820px; }
+  details { background: var(--dusk); border: 1px solid var(--line); border-radius: 16px; padding: 4px 20px; }
+  summary { cursor: pointer; list-style: none; font: 700 17px var(--font-display); padding: 14px 0; display: flex; justify-content: space-between; gap: 12px; }
+  summary::-webkit-details-marker { display: none; } summary::after { content: "+"; color: var(--glow); font-size: 22px; line-height: 1; transition: transform .2s; } details[open] summary::after { transform: rotate(45deg); }
+  details p { padding-bottom: 16px; color: var(--mist); }
+  .final { text-align: center; padding-block: 80px; } .final h2 { font-size: clamp(34px, 5.4vw, 60px); font-weight: 800; } .final .btn { margin-top: 26px; }
+  footer { border-top: 1px solid var(--line); padding-block: 28px; color: var(--mist); font-size: 13.5px; }
+  footer .wrap { display: flex; gap: 16px; justify-content: space-between; flex-wrap: wrap; }
+
+  /* compra */
+  .modal { position: fixed; inset: 0; z-index: 50; background: rgba(5, 6, 14, .72); backdrop-filter: blur(6px); display: grid; place-items: center; padding: 16px; }
+  .modal[hidden] { display: none; }
+  .sheet { width: min(520px, 100%); background: var(--dusk); border: 1px solid var(--line); border-radius: 24px; padding: 26px; position: relative; max-height: 92vh; overflow: auto; }
+  .sheet h3 { font-size: 24px; font-weight: 800; }
+  .x { position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 255, 255, .08); }
+  .methods { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+  .method { text-align: left; padding: 14px; border-radius: 16px; background: var(--night); border: 1px solid var(--line); } .method b { display: block; } .method span { color: var(--mist); font-size: 13px; }
+  .method.on { border-color: var(--glow); background: rgba(155, 243, 90, .08); }
+  .paybox { margin-top: 16px; display: grid; gap: 12px; justify-items: center; text-align: center; }
+  .paybox .key { font: 500 13px var(--font-mono); background: var(--night); border: 1px dashed var(--line); padding: 10px 12px; border-radius: 12px; word-break: break-all; user-select: all; width: 100%; }
+  .field { display: grid; gap: 6px; text-align: left; width: 100%; } .field label { font-size: 13px; color: var(--mist); }
+  .field input { background: var(--night); border: 1px solid var(--line); border-radius: 12px; padding: 11px 12px; color: var(--ink); font: inherit; }
+  .field input:focus { outline: 0; border-color: var(--glow); }
+  #pixqr { width: 180px; height: 180px; border-radius: 14px; background: #fff; padding: 10px; display: grid; place-items: center; color: #333; font-size: 12px; }
+
+  @media (max-width: 820px) {
+    .nav nav { display: none; } .nav .btn { margin-left: auto; }
+    .alt-row, .pricing, .install { grid-template-columns: 1fr; } .alt-row:nth-child(even) .mock { order: 0; }
+    .stats { grid-template-columns: repeat(2, 1fr); } .guarantees { grid-template-columns: 1fr; }
+    .panel { grid-template-columns: 1fr; } .side { flex-direction: row; overflow-x: auto; gap: 4px; } .me { display: none; } .nv { white-space: nowrap; }
+    .notch.open { height: 88%; } .w-clock, .w-water { display: none; } .desk { aspect-ratio: auto; height: 520px; }
+    .spec { grid-template-columns: 1fr; gap: 2px; } .ticket { padding: 24px; } .amount b { font-size: 72px; } .methods { grid-template-columns: 1fr; }
+  }
+  .h-touch { display: none; }
+  @media (hover: none), (pointer: coarse) { .h-mouse { display: none; } .h-touch { display: inline; } }
+  @media (max-width: 720px) {
+    body { overflow-x: hidden; }
+    .wrap { padding-inline: 16px; }
+    h1 { font-size: clamp(34px, 10vw, 46px) !important; line-height: 1.05; }
+    .ctas { flex-direction: column; align-items: stretch; } .ctas .btn { width: 100%; justify-content: center; }
+    .desk { height: 600px; border-radius: 18px; }
+    .notch.open { width: 96%; height: 94%; }
+    #dmain .chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
+    #dmain .chips::-webkit-scrollbar { display: none; } #dmain .chip { flex: none; }
+    #dmain .hmid { min-height: 230px; } #dmain .mini { flex: none; }
+    #dmain .convo { min-height: 120px; }
+    .nav .btn { padding: 9px 14px; font-size: 14px; }
+    section { padding-block: 52px; }
+    .modal .sheet { max-height: 90vh; overflow-y: auto; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+  .urg { background: linear-gradient(90deg, #3a2306, #2a1a08); border-bottom: 1px solid #FFB34055; color: var(--ink); font-size: 14.5px; }
+  .urg .wrap { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; justify-content: center; padding-block: 10px; text-align: center; }
+  .urg b { color: var(--warn); }
+  .urg .cd { font: 700 17px var(--font-mono); color: var(--warn); background: #00000055; border: 1px solid #FFB34066; border-radius: 10px; padding: 3px 10px; font-variant-numeric: tabular-nums; }
+  .urg small { display: block; width: 100%; color: var(--mist); font-size: 13px; }
+  .jv-video { margin: 0 0 26px; }
+  .jv-video video { display: block; width: 100%; height: auto; border-radius: 18px; border: 1px solid #5AD8FF44; background: #0b1020; box-shadow: 0 24px 60px -30px #5AD8FF77; }
+  .jv-video figcaption { margin-top: 10px; text-align: center; font-size: 14px; color: var(--mist); }
+  .jv { display: grid; grid-template-columns: 1fr 1.05fr; gap: 28px; align-items: center; }
+  .jv-player { position: relative; border-radius: 24px; padding: 26px 22px; text-align: center; overflow: hidden;
+    background: radial-gradient(420px 220px at 50% 0%, #5AD8FF26, transparent 70%), linear-gradient(170deg, #122036, #0f1224); border: 1px solid #5AD8FF44; box-shadow: 0 24px 60px -28px #5AD8FF66; }
+  .jv-ring { position: relative; width: 132px; height: 132px; margin: 4px auto 14px; border-radius: 50%; display: grid; place-items: center;
+    isolation: isolate; }
+  .jv-ring::after { content: ""; position: absolute; inset: 0; z-index: 0; border-radius: 50%; background: conic-gradient(from 0deg, #5AD8FF, #5AD8FF22, #5AD8FF, #5AD8FF22, #5AD8FF); }
+  .jv-ring::before { content: ""; position: absolute; inset: 7px; z-index: 1; border-radius: 50%; background: radial-gradient(circle, #5AD8FF33 0 55%, #0f1426 56%); }
+  .jv-play { position: relative; z-index: 2; width: 82px; height: 82px; border-radius: 50%; border: 0; cursor: pointer; background: var(--sky); color: #06121f; font-size: 30px; display: grid; place-items: center; box-shadow: 0 0 0 0 #5AD8FF88; transition: transform .15s; }
+  .jv-play:hover { transform: scale(1.05); }
+  .jv-player.on .jv-ring::after { animation: jvSpin 3.5s linear infinite; }
+  .jv-player.on .jv-play { animation: jvPulse 1.4s infinite; }
+  @keyframes jvSpin { to { transform: rotate(360deg); } }
+  @keyframes jvPulse { 0% { box-shadow: 0 0 0 0 #5AD8FF88 } 70% { box-shadow: 0 0 0 16px #5AD8FF00 } 100% { box-shadow: 0 0 0 0 #5AD8FF00 } }
+  .jv-player.on .jv-play svg { display: none; } .jv-play .stop { display: none; } .jv-player.on .jv-play .stop { display: block; }
+  .jv-cap { min-height: 44px; font-size: 15px; color: var(--ink); font-style: italic; }
+  .jv-dots button { white-space: nowrap; }
+  .jv-dots { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 12px; }
+  .jv-dots button { border: 1px solid #5AD8FF55; background: #00000040; color: var(--mist); border-radius: 99px; padding: 5px 11px; font: 600 12.5px var(--font-body); cursor: pointer; }
+  .jv-dots button.cur { background: #5AD8FF22; color: var(--ink); border-color: var(--sky); }
+  .jv-hint { display: block; margin-top: 10px; font-size: 12.5px; color: var(--mist); }
+  .jv-info h3 { margin: 0 0 6px; font: 800 20px var(--font-display); }
+  .jv-note { margin: 14px 0; padding: 14px 16px; border-radius: 14px; background: #FFB34012; border: 1px solid #FFB34055; font-size: 14.5px; color: var(--ink); }
+  .jv-note b { color: var(--warn); }
+  .jv-packs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 12px 0; }
+  .jv-pack { border-radius: 14px; padding: 12px 10px; text-align: center; background: var(--dusk); border: 1px solid var(--line); }
+  .jv-pack small { display: block; color: var(--mist); font-size: 12.5px; text-transform: uppercase; letter-spacing: .05em; }
+  .jv-pack b { display: block; font: 800 19px var(--font-display); margin: 4px 0 2px; }
+  .jv-pack span { font-size: 13px; color: var(--mist); }
+  .jv-pack .jv-dur { display: block; margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--line); font-style: normal; font-size: 12.5px; font-weight: 700; color: var(--sky); }
+  .jv-bonus { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 7px; font-size: 14.5px; }
+  .jv-bonus li::before { content: "🎁 "; }
+  .jv-fine { margin-top: 10px; font-size: 13px; color: var(--mist); }
+  @media (max-width: 820px) { .jv { grid-template-columns: 1fr; } }
+  @media (max-width: 420px) { .jv-packs { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .jv-player.on .jv-ring::after, .jv-player.on .jv-play { animation: none; } }
+  #logoKobi { transition: opacity .25s; }
+  #buddy { position: fixed; left: 0; top: 0; z-index: 60; width: 46px; height: 46px; pointer-events: none; opacity: 0; transition: opacity .3s; will-change: transform; }
+  #buddy.on { opacity: 1; }
+  #buddy .bd-body { width: 46px; height: 46px; filter: drop-shadow(0 6px 14px rgba(0,0,0,.45)); }
+  #buddy .bd-body svg { display: block; width: 46px; height: 46px; }
+  #buddy .bd-bub { position: absolute; left: 50px; top: -26px; white-space: nowrap; max-width: 260px; background: var(--ink); color: var(--night); font: 700 13px/1.3 var(--font-body); padding: 7px 11px; border-radius: 14px 14px 14px 4px; box-shadow: 0 8px 22px rgba(0,0,0,.35); opacity: 0; transform: translateY(6px) scale(.9); transform-origin: left bottom; transition: opacity .2s, transform .2s; }
+  #buddy.left .bd-bub { left: auto; right: 50px; border-radius: 14px 14px 4px 14px; transform-origin: right bottom; }
+  #buddy.talk .bd-bub { opacity: 1; transform: none; }
+  #buddy .bd-chair { position: absolute; left: -8px; top: 14px; width: 60px; height: 50px; opacity: 0; transform: translate(16px, -4px) scale(.1) rotate(-40deg); transform-origin: 30px 6px; transition: opacity .25s, transform .45s cubic-bezier(.3,1.6,.5,1); }
+  #buddy .bd-body { position: relative; transition: margin .45s cubic-bezier(.3,1.6,.5,1); }
+  #buddy.chill .bd-chair { opacity: 1; transform: none; transition-delay: .1s; }
+  #buddy.chill .bd-body { margin: 6px 0 0 4px; transition-delay: .35s; }
+  #buddy.chill .bd-body svg { transform: rotate(-24deg); transition: transform .4s .35s; }
+</style>
+
+<style id="promo12css">
+#promo12{position:relative;z-index:50;overflow:hidden;color:#fff;font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+ background:radial-gradient(600px 160px at 15% 0%,#3a2a00 0%,transparent 70%),radial-gradient(500px 160px at 90% 100%,#2b1d00 0%,transparent 70%),#050505;
+ border-bottom:1px solid #f5c54255;box-shadow:0 10px 30px -12px #000c}
+#promo12::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,transparent 0 22px,#ffffff06 22px 23px);pointer-events:none}
+#promo12::after{content:"";position:absolute;top:0;left:-40%;width:30%;height:100%;background:linear-gradient(90deg,transparent,#ffe08a22,transparent);transform:skewX(-20deg);animation:bfShine 4.5s infinite;pointer-events:none}
+@keyframes bfShine{0%{left:-40%}55%,100%{left:130%}}
+#promo12 .in{position:relative;max-width:1180px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;text-align:center}
+#promo12 .bf{font-weight:900;font-size:26px;letter-spacing:.06em;line-height:1;white-space:nowrap;
+ background:linear-gradient(180deg,#fff3c4 0%,#f5c542 45%,#c9901b 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 24px #f5c54233}
+#promo12 .bf small{display:block;font-size:10.5px;letter-spacing:.32em;color:#f5c542;-webkit-text-fill-color:#f5c542;margin-top:4px;font-weight:800}
+#promo12 .off{display:flex;align-items:center;gap:10px}
+#promo12 .pct{background:linear-gradient(135deg,#f5c542,#e8a317);color:#111;font-weight:900;font-size:22px;border-radius:12px;padding:6px 11px;box-shadow:0 6px 18px -6px #f5c542aa;transform:rotate(-3deg)}
+#promo12 .preco{font-size:15px;line-height:1.25;text-align:left}
+#promo12 .preco s{color:#9a9a9a}
+#promo12 .preco b{font-size:19px;color:#ffe08a}
+#promo12 .ate{font-size:13.5px;font-weight:700;color:#ffe08a;display:flex;flex-direction:column;gap:5px;align-items:center}
+#promo12 .ate .quando{color:#fff;background:#ffffff10;border:1px solid #f5c54266;border-radius:99px;padding:4px 12px;white-space:nowrap}
+#promo12 .cd{display:inline-flex;gap:5px}
+#promo12 .cd span{background:#111;border:1px solid #f5c54255;color:#ffe08a;border-radius:8px;padding:2px 7px;font-variant-numeric:tabular-nums;font-weight:800;min-width:38px}
+#promo12 a.go{background:linear-gradient(135deg,#ffe08a,#f5c542 50%,#d99a1c);color:#111;border-radius:99px;padding:10px 18px;text-decoration:none;font-weight:900;white-space:nowrap;box-shadow:0 8px 22px -8px #f5c542;animation:bfPulse 2.2s infinite}
+@keyframes bfPulse{50%{box-shadow:0 8px 30px -4px #f5c542cc}}
+/* botões de compra no clima de Black Friday */
+[data-buy].bf-btn{position:relative;overflow:visible;background:linear-gradient(135deg,#ffe9a6 0%,#f5c542 45%,#e0a01e 100%) !important;color:#141414 !important;border:0 !important;box-shadow:0 10px 26px -10px #f5c542cc,inset 0 1px 0 #fff8 !important}
+[data-buy].bf-btn:hover{filter:brightness(1.05)}
+[data-buy].bf-btn::after{content:attr(data-bf);position:absolute;top:-10px;right:-8px;background:#111;color:#ffe08a;border:1px solid #f5c542;font:900 11px/1 'Plus Jakarta Sans',system-ui,sans-serif;letter-spacing:.04em;padding:4px 7px;border-radius:99px;box-shadow:0 4px 10px -4px #000}
+[data-buy].bf-btn .promo-old{color:#5c4a14 !important;opacity:.75}
+.promo-old{text-decoration:line-through;font-weight:600;margin-right:5px}
+[data-buy].bf-btn .promo-new{color:#111;font-weight:900}
+@media(max-width:700px){header [data-buy].bf-btn::after{display:none}#promo12 .in{gap:10px;padding:10px 12px}#promo12 .bf{font-size:21px}#promo12 .pct{font-size:18px}#promo12 .preco{text-align:center}#promo12 .off{flex-direction:column;gap:6px}#promo12 .cd span{min-width:30px;padding:2px 5px}}
+</style>
+<div id="promo12" hidden><div class="in">
+ <div class="bf">BLACK FRIDAY<small id="bfSub">OFERTA RELÂMPAGO</small></div>
+ <div class="off"><span class="pct" id="bfPct">-17%</span><div class="preco">Kobi vitalício<br>de <s>R$ 89,90</s> por <b id="bfPreco">R$ 74,62</b></div></div>
+ <div class="ate"><span class="quando" id="bfQuando">⏰ Termina hoje</span><span class="cd" id="promo12cd"></span></div>
+ <a href="creator-comprar.html" id="promo12go" class="go">🖤 Garantir na Black Friday</a>
+</div></div>
+<script>
+(function(){
+  var FASES = [{ate:'2026-12-01T00:00:00-03:00',mostra:'2026-12-01T00:00:00-03:00',cupom:'BLACK30',pct:30,preco:'62,93',sub:'SÓ ATÉ 30/11'}];
+  var el = document.getElementById('promo12');
+  var F = FASES.filter(function(f){ return Date.now() < Date.parse(f.ate); })[0];
+  if (!el || !F) { if (el) el.remove(); return; }
+  var FIM = Date.parse(F.ate), M = new Date(Date.parse(F.mostra));
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+  var hoje = new Date(); var dia = new Date(M.getFullYear(), M.getMonth(), M.getDate()), h0 = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+  var dd = Math.round((dia - h0) / 864e5), quando = dd === 0 ? 'hoje' : dd === 1 ? 'amanhã' : 'dia';
+  document.getElementById('bfQuando').textContent = '⏰ Termina ' + quando + ', ' + pad(M.getDate()) + '/' + pad(M.getMonth() + 1) + ', às ' + pad(M.getHours()) + ':' + pad(M.getMinutes());
+  document.getElementById('bfPct').textContent = '-' + F.pct + '%';
+  document.getElementById('bfPreco').textContent = 'R$ ' + F.preco;
+  document.getElementById('bfSub').textContent = F.sub;
+  el.hidden = false;
+  var go = document.getElementById('promo12go'); if (go) go.href = 'creator-comprar.html' + KCQ;
+  function tick(){
+    var s = Math.max(0, Math.floor((FIM - Date.now()) / 1000));
+    if (!s) { location.reload(); return; }
+    var d = Math.floor(s / 86400), hh = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60), ss = s % 60;
+    document.getElementById('promo12cd').innerHTML = (d ? '<span>' + d + 'd</span>' : '') + '<span>' + pad(hh) + 'h</span><span>' + pad(m) + 'm</span><span>' + pad(ss) + 's</span>';
+  }
+  tick(); setInterval(tick, 1000);
+  function botoes(){
+    [].forEach.call(document.querySelectorAll('[data-buy]'), function(b){
+      if (b.classList.contains('bf-btn')) return;
+      b.classList.add('bf-btn'); b.setAttribute('data-bf', '-' + F.pct + '% BLACK');
+      b.innerHTML = b.innerHTML.replace(/R\$ ?89,90/, '<span class="promo-old">R$ 89,90</span><span class="promo-new">R$ ' + F.preco + '</span>');
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', botoes); else botoes();
+})();
+</script><header class="nav"><script>var KC=(new URLSearchParams(location.search).get('c')||'').toLowerCase().replace(/[^a-z0-9-]/g,''),KCQ='?c='+encodeURIComponent(KC),KBASE=location.pathname.replace(/[^/]*$/,'');if(!KC)location.replace(KBASE);else fetch('https://kobi-licencas.hiagorzandonadi.workers.dev/creators/pagina?c='+KC).then(function(r){if(!r.ok)location.replace(KBASE)}).catch(function(){});try{history.replaceState(null,'',KBASE+KC)}catch(e){}</script><link rel="icon" type="image/png" href="kobi-icon.png"><link rel="apple-touch-icon" href="kobi-icon.png"><meta property="og:image" content="https://hiagorzandonadi.github.io/kobi/kobi-icon.png"><div class="wrap">
+  <a class="brand" href="#topo"><span id="logoKobi"></span>Kobi</a>
+  <nav><a href="#demo">Demonstração</a><a href="#funcoes">Funções</a><a href="#jarvis">J.A.R.V.I.S.</a><a href="#instalar">Instalar</a><a href="#preco">Preço</a><a href="#duvidas">Dúvidas</a></nav>
+  <button class="btn btn-primary" data-buy>Comprar · R$ 89,90</button>
+</div></header>
+
+<main id="topo">
+  <div class="wrap hero" id="demo">
+    <div class="eyebrow">para Windows, Mac e Linux · versão 4.9.21</div>
+    <h1>Um amigo que mora no <em>topo da sua tela</em>.</h1>
+    <p class="lead">O Kobi vive no entalho do seu PC. Diga "Ei, Kobi" e ele toca suas músicas, marca seus lembretes, cuida das tarefas e conversa com você. Já vem com IA gratuita: você paga uma vez só e nunca mais paga nada, nem mensalidade, nem assinatura.</p>
+    <div class="ctas"><button class="btn btn-primary" data-buy>Comprar o Kobi · R$ 89,90</button><a class="btn btn-ghost" href="#funcoes">Ver o que ele faz</a></div>
+    <div class="price-note"><b>Pagamento único de R$ 89,90.</b> Sem mensalidade · IA grátis incluída · atualizações incluídas · Windows, Mac e Linux.</div>
+
+    <div class="desk" id="desk">
+      <div class="notch" id="notch" aria-label="Entalho do Kobi: passe o mouse ou toque para abrir">
+        <div class="pill" id="pill"></div>
+        <div class="panel"><div class="side" id="side"></div><div class="main" id="dmain"></div></div>
+      </div>
+      <div class="say-kobi" id="toast"></div>
+      <div class="widget w-water"><span style="font-size:22px">💧</span><div><b id="wWater">3/8</b><span>copos de água</span></div></div>
+      <div class="widget w-clock"><b id="clk">21:59</b><span id="dte">sexta, 13 de nov</span></div>
+      <div class="desk-hint"><span class="h-mouse">passe o mouse no entalho ↑</span><span class="h-touch">toque no entalho ↑</span><br>e experimente as funções</div>
+      <div class="taskbar"><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+  </div>
+
+  <section><div class="wrap">
+    <div class="sec-head"><h2>Fale do seu jeito.</h2><p>Ele entende português do dia a dia. Alguns pedidos que o Kobi resolve na hora:</p></div>
+    <div class="pills">
+      <span>Ei, Kobi, toca Henrique e Juliano</span><span>timer de 10 minutos para a pizza</span><span>me lembra de ligar pro cliente em 30 minutos</span><span>vai chover hoje?</span>
+      <span>quanto está o dólar?</span><span>quanto é 15% de 230</span><span>traduz para inglês bom dia</span><span>notícias de hoje</span><span>anota que preciso comprar café</span>
+      <span>procura o arquivo relatório</span><span>organiza minha área de trabalho</span><span>modo estudo</span><span>como está meu PC?</span><span>desliga o PC em 30 minutos</span>
+      <span>gera uma senha de 20</span><span>copia meu pix</span><span>cara ou coroa</span><span>conta uma piada</span><span>quantos dias faltam pro Natal?</span><span>toca na caixa da sala</span>
+    </div>
+  </div></section>
+
+  <section id="funcoes"><div class="wrap">
+    <div class="sec-head"><h2>Tudo num lugar só.</h2><p>Sem abrir mil janelas: o Kobi fica no topo e abre quando você precisa.</p></div>
+    <div class="alt">
+      <div class="alt-row">
+        <div><h3>Voz que funciona sem internet</h3><p>Diga "Ei, Kobi" e ele acorda. O reconhecimento roda no seu PC, sem mandar sua voz para a internet. Ele responde com uma voz fofinha de robô, e você interrompe quando quiser.</p>
+          <ul><li>Ensine o seu chamado falando 4 vezes, com teste na hora</li><li>Segure a tecla para falar; um toque rápido cancela tudo</li><li>Várias vozes e estilos, incluindo o novo Mordomo 🎩</li></ul></div>
+        <div class="mock"><div class="bub"><span id="m1"></span><div><small>Ouvindo…</small><p>toca uma música do Henrique e Juliano</p></div><div class="lvl"><i></i><i style="animation-delay:.15s"></i><i style="animation-delay:.3s"></i><i style="animation-delay:.1s"></i></div></div></div>
+      </div>
+      <div class="alt-row">
+        <div><h3>IA grátis, sem mensalidade</h3><p>O Kobi já vem com IA gratuita: não precisa pagar plano, assinatura nem cadastrar cartão. Se quiser, também dá para conectar o Claude, o ChatGPT, o Gemini ou o Groq com a sua chave. Ele entende o pedido e faz: abre apps, cria tarefas, pesquisa e até manda trabalho pesado para o Claude Code.</p>
+          <ul><li>Personalidade: divertido, fofo, profissional, sarcástico ou zen</li><li>Você decide o que ele pode fazer sozinho</li></ul></div>
+        <div class="mock"><div style="display:grid;gap:8px;width:100%;max-width:380px">
+          <div class="m u" style="max-width:none;align-self:end;justify-self:end">organiza minha área de trabalho</div>
+          <div class="m k" style="max-width:none">Achei 14 arquivos soltos: 6 imagens, 5 PDFs e 3 planilhas. Posso organizar em pastas?</div>
+          <div class="m u" style="max-width:none;justify-self:end">pode!</div>
+          <div class="m k" style="max-width:none">Pronto! Organizei tudo em "Kobi Organizado". Se quiser, eu desfaço. ✅</div></div></div>
+      </div>
+      <div class="alt-row">
+        <div><h3>No celular, por QR Code</h3><p>Aponte a câmera e fale com o Kobi pelo celular, no mesmo Wi-Fi. No iPhone, suas tarefas e lembretes aparecem no app Calendário, com alerta. Seus eventos do Google Agenda também aparecem no Kobi.</p></div>
+        <div class="mock" style="grid-auto-flow:column;gap:22px"><div class="qr" id="fakeqr"></div><div class="phone"><h5>🤖 Kobi</h5><div class="pi">✅ Enviar proposta · 15:00</div><div class="pi">⏰ Ligar pro cliente · 16:30</div><div class="pi">🛒 Comprar café</div></div></div>
+      </div>
+    </div>
+    <div class="feat-grid">
+      <div class="feat"><h3>🎵 Spotify no topo da tela</h3><p>Capa, controles, próximas músicas e escolha de onde tocar: PC, celular ou caixa de som.</p></div>
+      <div class="feat"><h3>✅ Tarefas, lembretes e alarmes</h3><p>Listas, prioridades, subtarefas, repetição, aviso antes da hora e alarme com som.</p></div>
+      <div class="feat"><h3>⏱ Timers e foco</h3><p>Timers com nome que correm ao lado do Kobi, cronômetro e sessões de foco no estilo Pomodoro.</p></div>
+      <div class="feat"><h3>💧 Hábitos e bem-estar</h3><p>Água, leitura, exercício, lembretes de pausa e alertas quando o PC está no limite.</p></div>
+      <div class="feat"><h3>📋 Copiados, notas e textos rápidos</h3><p>Histórico do que você copiou, anotações por voz e "copia meu pix" com um pedido.</p></div>
+      <div class="feat"><h3>🧩 Widgets na área de trabalho</h3><p>Relógio, clima, calendário, notas, notificações do WhatsApp e mais, em qualquer tamanho.</p></div>
+    </div>
+    <div class="sec-head" style="margin-top:56px"><h3 style="font-size:24px;font-weight:800">Novidades 🔥</h3><p style="font-size:15.5px">O que chegou nas últimas versões.</p></div>
+    <div class="feat-grid">
+      <div class="feat"><h3>🤖 Claude Code e Codex pelo Kobi</h3><p>Tem o Claude Code ou o Codex no PC? Diga "abre o Claude e faz um site pra mim" e acompanhe no topo da tela, ao vivo, o que ele está fazendo. Dá para trocar entre o Kobi e a IA com um toque.</p></div>
+      <div class="feat"><h3>🧠 Memória inteligente</h3><p>Ele lembra o que você conta (seu trabalho, quem é quem, do que você gosta) e mostra tudo num mapa de ideias ligadas. Pergunte "eu trabalho com o quê?" e veja o cérebro dele procurando.</p></div>
+      <div class="feat"><h3>🌌 Modo imersivo</h3><p>Uma tela cheia bonita com o Kobi grande no meio, reagindo à sua voz, com clima, tarefas, uso do PC e a música tocando.</p></div>
+      <div class="feat"><h3>⚡ Deixa o PC mais rápido</h3><p>"Meu PC tá travado": ele examina tudo com uma animação, mostra o que está pesando e limpa com um pedido.</p></div>
+      <div class="feat"><h3>🗣 Vários pedidos de uma vez</h3><p>"Toca Spotify e dá uma verificada no PC": ele faz tudo, um depois do outro.</p></div>
+      <div class="feat"><h3>🔌 Conexões com seus apps</h3><p>Ligue o Kobi ao Zapier, GitHub, Notion e outros, direto pelo painel.</p></div>
+      <div class="feat"><h3>💻 Windows, Mac e Linux</h3><p>A mesma compra vale em 2 computadores, em qualquer sistema. Precisa de mais? Dá para liberar outros PCs pelo app.</p></div>
+      <div class="feat"><h3>🎙 Segurar para falar</h3><p>Segure o atalho e fale: ele ouve a frase inteira, desde a primeira palavra. Um toque rápido cancela o que ele estiver fazendo.</p></div>
+      <div class="feat"><h3>🤫 Modo só executar</h3><p>Ele faz o que você pediu e fica quieto, sem responder em voz alta.</p></div>
+    </div>
+  </div></section>
+
+  <section><div class="wrap">
+    <div class="sec-head"><h2>Ele tem personalidade.</h2><p>São 13 expressões, que mudam conforme a conversa. Quando fica parado, ele persegue uma mosquinha, brinca com uma bolinha e cochila se você some por um tempo.</p></div>
+    <div class="moods" id="moods"></div>
+    <div class="sec-head" style="margin-top:44px"><h3 style="font-size:24px;font-weight:800">E fica do jeitinho que você quiser</h3><p style="font-size:15.5px">Cor, olhos, nome e 12 acessórios.</p></div>
+    <div class="wardrobe" id="wardrobe"></div>
+  </div></section>
+
+  <section><div class="wrap">
+    <div class="sec-head"><h2>Seu PC, suas coisas.</h2><p>Suas tarefas, notas e conversas ficam no seu computador.</p></div>
+    <div class="stats">
+      <div class="stat"><b>0</b><span>contas para criar. É instalar e usar.</span></div>
+      <div class="stat"><b>R$ 0</b><span>de mensalidade. Você paga R$ 89,90 uma vez só.</span></div>
+      <div class="stat"><b>100%</b><span>offline para voz e IA local, se você quiser.</span></div>
+      <div class="stat"><b>~110 MB</b><span>de instalador, com a voz em português incluída.</span></div>
+    </div>
+    <ul class="guarantees">
+      <li>Sua voz é reconhecida no próprio PC</li><li>Chaves de API ficam criptografadas no seu computador</li>
+      <li>Organizar a área de trabalho sempre pede confirmação e pode ser desfeito</li><li>Desligar o PC ou fechar programas só acontece com o seu "sim"</li>
+      <li>O modo "sempre ouvindo" é opcional</li><li>Some sozinho em jogos e vídeos em tela cheia</li>
+    </ul>
+  </div></section>
+
+  <section id="instalar"><div class="wrap">
+    <div class="sec-head"><h2>Instalar leva 2 minutos.</h2><p>Depois da compra o link do instalador chega no seu e-mail.</p></div>
+    <div class="install">
+      <ol class="steps">
+        <li><div><b>Baixe o Kobi-Setup.exe</b><span>Pelo link que chega no seu e-mail depois do pagamento.</span></div></li>
+        <li><div><b>Abra o instalador</b><span>Escolha a pasta, se quiser, e clique em Instalar.</span></div></li>
+        <li><div><b>Diga oi ao Kobi</b><span>A tela de boas-vindas pergunta seu nome, o nome dele e o visual.</span></div></li>
+        <li><div><b>Escolha o cérebro</b><span>IA local grátis, IA da nuvem ou modo simples. Dá para mudar depois.</span></div></li>
+        <li><div><b>Ligue a voz</b><span>Ative o "Ei, Kobi" e baixe a voz fofinha, se quiser.</span></div></li>
+        <li><div><b>Passe o mouse no entalho</b><span>Ele fica no topo da tela. Pronto!</span></div></li>
+      </ol>
+      <div class="reqs">
+        <div class="req"><small>sistema</small><b>Windows 10 ou 11, 64 bits</b></div>
+        <div class="req"><small>memória</small><b>4 GB · 8 GB ou mais para a IA local</b></div>
+        <div class="req"><small>espaço</small><b>300 MB · +2 GB com a IA local</b></div>
+        <div class="req"><small>microfone</small><b>Opcional, para falar com ele</b></div>
+        <div class="warn"><b>O Windows mostrou "O Windows protegeu o computador"?</b><br>Isso acontece com apps novos. Clique em <b>Mais informações</b> e depois em <b>Executar assim mesmo</b>.</div>
+      </div>
+    </div>
+  </div></section>
+
+  <section id="jarvis"><div class="wrap">
+    <div class="sec-head"><h2>A voz do J.A.R.V.I.S. no seu PC.</h2><p>Uma voz realista no estilo do assistente dos filmes, com aquele jeitão elegante e um pouco sarcástico. Aperte o play e ouça o Kobi falando com ela.</p></div>
+    <figure class="jv-video">
+      <video controls playsinline preload="metadata" poster="video/jarvis-rotina-capa.png" width="1180" height="330">
+        <source src="video/jarvis-rotina-2.mp4" type="video/mp4">
+      </video>
+      <figcaption>▶ Dê o play com som: o J.A.R.V.I.S. apresentando a rotina de bom dia no entalhe do Kobi.</figcaption>
+    </figure>
+    <div class="jv">
+      <div class="jv-player" id="jvPlayer">
+        <div class="jv-ring"><button class="jv-play" id="jvPlay" type="button" aria-label="Ouvir a voz do J.A.R.V.I.S."><svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg><svg class="stop" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg></button></div>
+        <div class="jv-cap" id="jvCap">"Às suas ordens, senhor."</div>
+        <div class="jv-dots" id="jvDots"></div>
+        <span class="jv-hint">Cada clique toca uma fala diferente.</span>
+      </div>
+      <div class="jv-info">
+        <div class="jv-note"><b>A voz do J.A.R.V.I.S. não é grátis.</b> No Kobi você já tem acesso vitalício a todas as funções, inteligência artificial gratuita, todas as atualizações e várias vozes grátis. A voz do J.A.R.V.I.S. é um extra opcional, comprado dentro do app. Tentamos de várias formas deixá-la de graça, mas a voz realista é gerada por uma API de voz que cobra por cada fala.</div>
+        <h3>Pague só o que usar</h3>
+        <div class="jv-packs">
+          <div class="jv-pack"><small>Básico</small><b>R$ 49,90</b><span>1.000 respostas</span><i class="jv-dur">⏱ dura 1 mês e 3 dias</i></div>
+          <div class="jv-pack"><small>Plus</small><b>R$ 89,90</b><span>2.000 respostas</span><i class="jv-dur">⏱ dura 2 meses e 7 dias</i></div>
+          <div class="jv-pack"><small>Pro</small><b>R$ 169,90</b><span>4.000 respostas</span><i class="jv-dur">⏱ dura 4 meses e 13 dias</i></div>
+        </div>
+        <div class="jv-fine"><b>Essa contagem de tempo é se você falar com ele todo dia</b>, mas geralmente dura bem mais, porque ninguém usa todos os dias. E se você não usar, o crédito continua lá: não expira e dura para sempre. Sem mensalidade. Para comprar: no Kobi, abra <b>Voz</b>, toque no cartão <b>J.A.R.V.I.S.</b> e depois em <b>Comprar / ver uso</b>.</div>
+        <ul class="jv-bonus">
+          <li><b>Protocolo Despertar:</b> a rotina de bom dia dos vídeos do Instagram, já configurada</li>
+          <li>Novas habilidades do J.A.R.V.I.S. de presente, conforme forem lançadas</li>
+        </ul>
+      </div>
+    </div>
+  </div></section>
+  <script>
+  (function () {
+    var S = [
+      { f: 'audio/jarvis-1.mp3', t: 'Apresentação', c: '"Às suas ordens, senhor. J.A.R.V.I.S. online."' },
+      { f: 'audio/jarvis-2.mp3', t: 'Bom dia', c: 'Bom dia, previsão do tempo e o lembrete do guarda-chuva.' },
+      { f: 'audio/jarvis-3.mp3', t: 'Spotify', c: 'Abrindo o Spotify, com um pouquinho de sarcasmo.' },
+      { f: 'audio/jarvis-4.mp3', t: 'Lembrete', c: 'Um lembrete do jeito que só ele dá.' }
+    ];
+    var box = document.getElementById('jvPlayer'), btn = document.getElementById('jvPlay'), cap = document.getElementById('jvCap'), dots = document.getElementById('jvDots');
+    var au = new Audio(), i = -1, next = 0;
+    au.preload = 'none';
+    S.forEach(function (s, k) { var b = document.createElement('button'); b.type = 'button'; b.textContent = s.t; b.onclick = function () { play(k); }; dots.appendChild(b); });
+    function mark() { [].forEach.call(dots.children, function (b, k) { b.classList.toggle('cur', k === i); }); }
+    function stop() { au.pause(); box.classList.remove('on'); }
+    function play(k) {
+      i = k; next = (k + 1) % S.length; au.src = S[k].f; cap.textContent = S[k].c; mark();
+      box.classList.add('on'); var p = au.play(); if (p && p.catch) p.catch(stop);
+    }
+    au.addEventListener('ended', stop);
+    btn.addEventListener('click', function () { if (box.classList.contains('on')) stop(); else play(next); });
+  })();
+  </script>
+
+  <section id="preco"><div class="wrap pricing">
+    <div class="ticket">
+      <div class="tag">kobi · licença vitalícia</div>
+      <div class="amount"><b>R$ 89,90</b></div>
+      <div class="once">Pagamento único. Pagou, é seu para sempre.</div>
+      <ul><li>Todas as funções, sem planos nem limites</li><li>Voz offline com "Ei, Kobi" e voz fofinha de robô</li><li>IA gratuita incluída, sem mensalidade nem assinatura</li><li>Atualizações incluídas, com aviso quando sair versão nova</li><li>Para Windows 10 e 11, Mac e Linux</li></ul>
+      <button class="btn btn-primary" data-buy>Comprar por R$ 89,90</button>
+      <div class="fine">PIX ou cartão · o link de download chega no seu e-mail</div>
+    </div>
+    <dl class="specs">
+      <div class="spec"><dt>Download</dt><dd>O link chega no seu e-mail logo depois do pagamento</dd></div>
+      <div class="spec"><dt>Atualizações</dt><dd>O próprio Kobi avisa e instala com um clique</dd></div>
+      <div class="spec"><dt>Internet</dt><dd>Só para clima, notícias, Spotify, celular e IA da nuvem</dd></div>
+      <div class="spec"><dt>Suporte</dt><dd>Fale com a gente pelo contato no fim da página</dd></div>
+    </dl>
+  </div></section>
+
+  <section id="duvidas"><div class="wrap">
+    <div class="sec-head"><h2>Dúvidas</h2></div>
+    <div class="faq">
+      <details><summary>Tem mensalidade?</summary><p>Não. Você paga R$ 89,90 uma vez só e o Kobi é seu, com as atualizações incluídas. Não tem plano, assinatura nem cobrança todo mês.</p></details>
+      <details><summary>A voz do J.A.R.V.I.S. vem inclusa?</summary><p>Não. O Kobi vem com várias vozes grátis. A voz do J.A.R.V.I.S. é um extra opcional, comprado dentro do app em pacotes de respostas (a partir de R$ 49,90 por 1.000 respostas), sem mensalidade e sem prazo para usar. Ela é cobrada porque a voz realista é gerada por uma API de voz que cobra por cada fala.</p></details>
+      <details><summary>Como eu recebo o Kobi?</summary><p>Depois que o pagamento é aprovado (no PIX é na hora), você recebe no seu e-mail o link para baixar o instalador, com o passo a passo para ativar na primeira vez que abrir. Se não achar o e-mail, olhe a caixa de spam.</p></details>
+      <details><summary>Preciso pagar alguma IA?</summary><p>Não. O Kobi já vem com IA gratuita, sem mensalidade. Ele pode usar uma IA que roda no seu PC. Se quiser, também pode conectar o Claude, o ChatGPT, o Gemini ou o Groq com a sua chave; nesse caso, o uso é cobrado pela empresa da IA (Gemini e Groq têm cota grátis).</p></details>
+      <details><summary>Ele fica ouvindo tudo o que eu falo?</summary><p>O modo "sempre ouvindo" é opcional. Quando ligado, o reconhecimento acontece no seu computador e o Kobi só reage quando você diz "Ei, Kobi".</p></details>
+      <details><summary>Funciona no meu PC?</summary><p>Funciona em Windows 10 e 11 de 64 bits. Para a IA local, o ideal é ter 8 GB de memória ou mais. Sem ela, o Kobi continua entendendo os comandos principais.</p></details>
+      <details><summary>Atrapalha quando eu jogo ou vejo vídeo?</summary><p>Não. Ele se esconde sozinho quando algum app está em tela cheia e volta quando você sai.</p></details>
+      <details><summary>Funciona no Linux?</summary><p>Sim! Tem o AppImage, que roda em qualquer distribuição, e o .deb para Ubuntu e Debian. No Linux, a música funciona com qualquer player (Spotify, VLC, navegador) e a voz usa as vozes do sistema. As notificações do WhatsApp, organizar janelas e a voz neural fofinha são só do Windows por enquanto.</p></details>`n<details><summary>Funciona no Mac?</summary><p>Sim! Tem versão para Mac com chip Apple (M1, M2, M3, M4, M5) e para Mac Intel. No Mac, a música funciona com o app do Spotify e a voz usa as vozes do macOS. As notificações do WhatsApp e a voz neural fofinha são só do Windows por enquanto.</p></details>
+    </div>
+  </div></section>
+
+  <div class="wrap final"><h2>Seu PC fica mais legal com o Kobi lá em cima.</h2><button class="btn btn-primary" data-buy>Comprar o Kobi · R$ 89,90</button></div>
+</main>
+
+<footer><div class="wrap"><span>Kobi · seu assistente no topo da tela · contato: direct no Instagram <a id="contact" href="https://instagram.com/kobi.ia" target="_blank" rel="noopener" style="color:inherit;font-weight:600">@kobi.ia</a></span><span>Usa software livre: Vosk (Apache 2.0), Piper (MIT), Electron (MIT). Windows e Spotify são marcas de seus donos.</span></div></footer>
+
+<div class="modal" id="modal" hidden><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mt">
+  <button class="x" id="mx" aria-label="Fechar">✕</button>
+  <div id="mstep"></div>
+</div></div>
+
+<script>/* Kobi — mascote (SVG) com humores, estilos de olho e acessórios. Usado no entalho e no painel. */
+(function () {
+  const MOODS = {
+    idle: 'Repouso', listen: 'Ouvindo', think: 'Pensando', talk: 'Falando', happy: 'Feliz', laugh: 'Rindo',
+    love: 'Carinho', cool: 'Descolado', surprised: 'Surpreso', angry: 'Bravo', cry: 'Chorando', sleep: 'Dormindo', success: 'Conseguiu!',
+  };
+  const EYES = { round: 'Redondos', oval: 'Ovais', pixel: 'Pixel', big: 'Grandões', line: 'Tracinho' };
+  const ACCESSORIES = {
+    none: 'Nenhum', party: 'Chapéu de festa', crown: 'Coroa', headphones: 'Fones', bow: 'Laço', beanie: 'Gorro',
+    cap: 'Boné', glasses: 'Óculos', halo: 'Auréola', horns: 'Chifrinhos', flower: 'Florzinha', santa: 'Gorro de Natal',
+  };
+  const BODIES = [
+    ['Nuvem', '#F4F7FF', '#BFCDF5'], ['Menta', '#E8FFF4', '#9EE6C3'], ['Pêssego', '#FFF1E8', '#FFC2A3'], ['Lavanda', '#F6EEFF', '#CDB4FF'],
+    ['Limão', '#FBFFE6', '#DDEB8A'], ['Céu', '#EAF7FF', '#94D0FF'], ['Rosa', '#FFEFF6', '#FFB3D1'], ['Grafite', '#6B6F7E', '#3A3D48'], ['Ouro', '#FFF6D6', '#F2C94C'],
+  ];
+  const EYE_COLORS = ['#9BF35A', '#5AD8FF', '#FF7AC8', '#FFD25A', '#FFFFFF', '#FF5A5A', '#B78CFF'];
+
+  function eyesFor(mood, style, c) {
+    const L = 15, R = 25, Y = 18;
+    const shape = (x, extra = '') => {
+      if (style === 'pixel') return `<rect x="${x - 2.4}" y="${Y - 3}" width="4.8" height="6" rx="0.6" fill="${c}" ${extra}/>`;
+      if (style === 'oval') return `<ellipse cx="${x}" cy="${Y}" rx="2.2" ry="3.6" fill="${c}" ${extra}/>`;
+      if (style === 'big') return `<circle cx="${x}" cy="${Y}" r="3.7" fill="${c}" ${extra}/><circle cx="${x - 1.2}" cy="${Y - 1.4}" r="1.1" fill="#fff" opacity=".85"/>`;
+      if (style === 'line') return `<rect x="${x - 3}" y="${Y - 0.9}" width="6" height="1.8" rx="0.9" fill="${c}" ${extra}/>`;
+      return `<ellipse cx="${x}" cy="${Y}" rx="2.6" ry="3.3" fill="${c}" ${extra}/>`;
+    };
+    const arcUp = (x) => `<path d="M${x - 3} ${Y + 1.2} Q${x} ${Y - 3.2} ${x + 3} ${Y + 1.2}" stroke="${c}" stroke-width="1.9" fill="none" stroke-linecap="round"/>`;
+    const arcDown = (x) => `<path d="M${x - 3} ${Y - 1} Q${x} ${Y + 2.6} ${x + 3} ${Y - 1}" stroke="${c}" stroke-width="1.9" fill="none" stroke-linecap="round"/>`;
+    const heart = (x) => `<path d="M${x} ${Y + 3} l-3.2 -3.2 a1.9 1.9 0 0 1 3.2 -2.4 a1.9 1.9 0 0 1 3.2 2.4z" fill="#FF5A8A"/>`;
+    const star = (x) => `<path d="M${x} ${Y - 3.6} l1.1 2.4 2.6.3-1.9 1.8.5 2.6-2.3-1.3-2.3 1.3.5-2.6-1.9-1.8 2.6-.3z" fill="#FFD25A"/>`;
+    switch (mood) {
+      case 'happy': return arcUp(L) + arcUp(R);
+      case 'laugh': return arcUp(L) + arcUp(R) + `<path d="M17 21.5 Q20 25 23 21.5z" fill="${c}"/>`;
+      case 'love': return heart(L) + heart(R);
+      case 'success': return star(L) + star(R);
+      case 'sleep': return arcDown(L) + arcDown(R);
+      case 'cool': return `<rect x="9.5" y="14.5" width="21" height="6.4" rx="3" fill="#0A0A0E"/><rect x="11" y="15.6" width="7" height="2" rx="1" fill="#fff" opacity=".35"/>`;
+      case 'surprised': return `<circle cx="${L}" cy="${Y}" r="3.8" fill="none" stroke="${c}" stroke-width="1.6"/><circle cx="${R}" cy="${Y}" r="3.8" fill="none" stroke="${c}" stroke-width="1.6"/><ellipse cx="20" cy="23" rx="1.4" ry="1.7" fill="${c}"/>`;
+      case 'angry': return shape(L) + shape(R) + `<path d="M11.5 12.8 L18 15" stroke="${c}" stroke-width="1.6" stroke-linecap="round"/><path d="M28.5 12.8 L22 15" stroke="${c}" stroke-width="1.6" stroke-linecap="round"/>`;
+      case 'cry': return arcDown(L) + arcDown(R) + `<path d="M13 20.5 q-1 2.5 0 3.6 q1 -1.1 0 -3.6z" fill="#5AD8FF"/><path d="M27 20.5 q-1 2.5 0 3.6 q1 -1.1 0 -3.6z" fill="#5AD8FF"/>`;
+      case 'think': return `<g transform="translate(1.2 -1.6)">${shape(L)}${shape(R)}</g><circle cx="31" cy="12" r=".9" fill="${c}" opacity=".7"/>`;
+      default: return shape(L) + shape(R);
+    }
+  }
+  function accessory(a, body2) {
+    switch (a) {
+      case 'party': return '<path d="M12 7 L17 -6 L22 7z" fill="#FF5AA0"/><path d="M13.6 3 l7 0" stroke="#FFD25A" stroke-width="1.4"/><circle cx="17" cy="-6.5" r="1.8" fill="#FFD25A"/>';
+      case 'crown': return '<path d="M10 7 L11 -1 L15.5 3.5 L20 -3 L24.5 3.5 L29 -1 L30 7z" fill="#F2C94C" stroke="#C99A1B" stroke-width=".7"/><circle cx="20" cy="2.5" r="1.2" fill="#FF5A5A"/>';
+      case 'headphones': return '<path d="M4 19 Q4 2 20 2 Q36 2 36 19" stroke="#2B2E3B" stroke-width="2.6" fill="none"/><rect x="0.5" y="15" width="5.5" height="10" rx="2.5" fill="#FF5A8A"/><rect x="34" y="15" width="5.5" height="10" rx="2.5" fill="#FF5A8A"/>';
+      case 'bow': return '<path d="M26 6 l-5 -4 v8z M26 6 l5 -4 v8z" fill="#FF5AA0"/><circle cx="26" cy="6" r="1.6" fill="#D93A7E"/>';
+      case 'beanie': return '<path d="M5 10 Q5 -2 20 -2 Q35 -2 35 10z" fill="#5A7CFF"/><rect x="4" y="7.5" width="32" height="4" rx="2" fill="#3F5BD9"/><circle cx="20" cy="-3" r="2.6" fill="#fff"/>';
+      case 'santa': return '<path d="M6 9 Q8 -3 22 -2 Q30 -1 34 6 L36 9z" fill="#E53935"/><rect x="4" y="7" width="32" height="4" rx="2" fill="#fff"/><circle cx="35" cy="5" r="2.4" fill="#fff"/>';
+      case 'cap': return '<path d="M6 10 Q6 0 20 0 Q32 0 33 10z" fill="#30D158"/><path d="M20 9 L40 10 L38 12 L20 11z" fill="#1E9E43"/>';
+      case 'glasses': return '<circle cx="15" cy="18" r="5" fill="none" stroke="#2B2E3B" stroke-width="1.4"/><circle cx="25" cy="18" r="5" fill="none" stroke="#2B2E3B" stroke-width="1.4"/><path d="M20 18h0" stroke="#2B2E3B" stroke-width="1.4"/>';
+      case 'halo': return '<ellipse cx="20" cy="-1" rx="9" ry="2.6" fill="none" stroke="#FFD25A" stroke-width="1.8"/>';
+      case 'horns': return `<path d="M9 8 L7 0 L13 6z" fill="#FF5A5A"/><path d="M31 8 L33 0 L27 6z" fill="#FF5A5A"/>`;
+      case 'flower': return '<g transform="translate(29 5)"><circle r="2.2" cx="0" cy="-2.6" fill="#FF9EC8"/><circle r="2.2" cx="2.5" cy="0" fill="#FF9EC8"/><circle r="2.2" cx="0" cy="2.6" fill="#FF9EC8"/><circle r="2.2" cx="-2.5" cy="0" fill="#FF9EC8"/><circle r="1.6" fill="#FFD25A"/></g>';
+      default: return '';
+    }
+  }
+  // opts: { body, body2, visor, eye, eyeStyle, accessory, antenna, mood, blink, size, uid }
+  function svg(o = {}) {
+    const k = { body: '#F4F7FF', body2: '#BFCDF5', visor: '#1B1E2B', eye: '#9BF35A', eyeStyle: 'round', accessory: 'none', antenna: true, blink: true, ...o };
+    const size = k.size || 40; const id = 'kb' + (k.uid || Math.random().toString(36).slice(2, 7));
+    const mood = k.mood || 'idle';
+    const antC = mood === 'listen' ? '#FF453A' : mood === 'think' ? '#FFD60A' : mood === 'talk' ? '#5AD8FF' : k.eye;
+    const ant = k.antenna && !['crown', 'beanie', 'santa', 'cap', 'party'].includes(k.accessory)
+      ? `<line x1="27" y1="7" x2="31" y2="1.8" stroke="${k.body2}" stroke-width="2" stroke-linecap="round"/><circle class="kb-ant${mood === 'listen' || mood === 'think' ? ' kb-pulse' : ''}" cx="31.5" cy="1.8" r="2.4" fill="${antC}"/>` : '';
+    const waves = mood === 'listen' ? '<path class="kb-wave" d="M37 14 q2.5 4 0 8" stroke="#FF453A" stroke-width="1.3" fill="none" stroke-linecap="round"/><path class="kb-wave kb-w2" d="M39.5 12 q3.8 6 0 12" stroke="#FF453A" stroke-width="1.1" fill="none" stroke-linecap="round" opacity=".7"/>' : '';
+    const zz = mood === 'sleep' ? '<text x="33" y="6" font-size="6" font-weight="800" fill="#9BB0FF" class="kb-zz">z</text>' : '';
+    const blink = k.blink && ['idle', 'listen', 'talk', 'think', 'angry'].includes(mood) ? ' kb-blink' : '';
+    return `<svg class="kobi kb-${mood}" width="${size}" height="${size * 0.8}" viewBox="-2 -8 44 40" overflow="visible">
+      <defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${k.body}"/><stop offset="1" stop-color="${k.body2}"/></linearGradient></defs>
+      ${ant}
+      <g class="kb-bodyg"><rect x="3" y="6" width="34" height="25" rx="11" fill="url(#${id})"/>
+      <rect x="7" y="11" width="26" height="14" rx="7" fill="${k.visor}"/>
+      <g class="kb-eyes" data-eyes><g class="kb-eyein${blink}">${eyesFor(mood, k.eyeStyle, k.eye)}</g></g>
+      ${mood === 'talk' ? `<rect class="kb-mouth" x="17.5" y="22" width="5" height="1.6" rx=".8" fill="${k.eye}"/>` : ''}
+      ${['love', 'happy', 'laugh'].includes(mood) ? '<ellipse cx="9.5" cy="23" rx="2" ry="1.1" fill="#FF8FB1" opacity=".55"/><ellipse cx="30.5" cy="23" rx="2" ry="1.1" fill="#FF8FB1" opacity=".55"/>' : ''}
+      ${accessory(k.accessory, k.body2)}</g>${waves}${zz}
+    </svg>`;
+  }
+  const CSS = `
+  .kobi { overflow: visible; display: block; }
+  .kobi .kb-eyes { transition: transform .12s ease-out; }
+  .kobi .kb-blink { transform-origin: center; transform-box: fill-box; }
+  .kobi.kb-blinknow .kb-blink { animation: kbBlink .3s ease-in-out; }
+  @keyframes kbBlink { 0%, 100% { transform: scaleY(1); } 45%, 55% { transform: scaleY(.08); } }
+  .kobi .kb-pulse { animation: kbPulse 1s infinite; }
+  @keyframes kbPulse { 50% { opacity: .3; } }
+  .kobi .kb-wave { animation: kbWave 1s infinite; } .kobi .kb-w2 { animation-delay: .25s; }
+  @keyframes kbWave { 0%, 100% { opacity: .2; } 50% { opacity: 1; } }
+  .kobi.kb-talk .kb-mouth { animation: kbTalk .28s infinite alternate; transform-origin: center; transform-box: fill-box; }
+  @keyframes kbTalk { to { transform: scaleY(2.6); } }
+  .kobi.kb-laugh .kb-bodyg, .kobi.kb-happy .kb-bodyg { animation: kbBounce .5s ease-in-out 3; transform-origin: 50% 100%; transform-box: fill-box; }
+  @keyframes kbBounce { 50% { transform: translateY(-1.6px); } }
+  .kobi.kb-angry .kb-bodyg { animation: kbShake .12s 6; } @keyframes kbShake { 50% { transform: translateX(.8px); } }
+  .kobi.kb-surprised .kb-bodyg { animation: kbPop .3s ease; transform-origin: 50% 100%; transform-box: fill-box; } @keyframes kbPop { 50% { transform: scale(1.08); } }
+  .kobi .kb-zz { animation: kbZz 2s infinite; } @keyframes kbZz { 0% { opacity: 0; transform: translate(0,0); } 50% { opacity: 1; } 100% { opacity: 0; transform: translate(3px,-5px); } }
+  .kb-noanim .kobi * { animation: none !important; }`;
+  if (!document.getElementById('kobi-css')) { const st = document.createElement('style'); st.id = 'kobi-css'; st.textContent = CSS; document.head.appendChild(st); }
+  // piscada: em vez de uma animação infinita (que redesenha a tela 60x por segundo o tempo todo),
+  // uma piscada rápida a cada 4–6 s. A tela só trabalha durante a piscada.
+  if (!window.__kobiBlink) {
+    window.__kobiBlink = true;
+    const blinkOnce = () => {
+      if (!document.hidden) {
+        const els = new Set(); document.querySelectorAll('.kobi .kb-blink').forEach((g) => { const s = g.closest('.kobi'); if (s) els.add(s); });
+        els.forEach((s) => { s.classList.add('kb-blinknow'); setTimeout(() => s.classList.remove('kb-blinknow'), 320); });
+      }
+      setTimeout(blinkOnce, 4000 + Math.random() * 2000);
+    };
+    setTimeout(blinkOnce, 3000);
+  }
+  function lookAt(root, dx, dy, intensity = 1) {
+    const len = Math.hypot(dx, dy) || 1; const k = Math.min(1, len / 500) * intensity;
+    const tx = (dx / len) * 1.8 * k, ty = (dy / len) * 1.4 * k;
+    root.querySelectorAll('[data-eyes]').forEach((g) => g.setAttribute('transform', `translate(${tx.toFixed(2)} ${ty.toFixed(2)})`));
+  }
+  window.KOBI = { svg, lookAt, MOODS, EYES, ACCESSORIES, BODIES, EYE_COLORS };
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+  /* ====== CONFIGURE AQUI ====== */
+  const PIX_KEY = '';          // sua chave PIX (e-mail, CPF/CNPJ, telefone ou aleatória)
+  const PIX_NAME = 'Kobi';     // nome que aparece para quem paga
+  const CARD_URL = '';         // link do checkout com cartão (Mercado Pago, Kiwify, Hotmart…)
+  const CHECKOUT_URL = 'https://pay.cakto.com.br/kojjksr_1325563'; // checkout da Cakto (PIX e cartão; a Cakto manda o link de download por e-mail)
+  const CONTACT = 'direct no Instagram @kobi.ia';
+  const DL_SETUP = 'https://github.com/hiagorzandonadi/kobi/releases/latest/download/Kobi-Setup.exe';   // links dos instaladores (GitHub Releases)
+  const DL_PORTABLE = 'https://github.com/hiagorzandonadi/kobi/releases/latest/download/Kobi-Portable.exe';
+  const DL_MAC_ARM = 'https://github.com/hiagorzandonadi/kobi/releases/latest/download/Kobi-Mac-arm64.dmg';
+  const DL_MAC_INTEL = 'https://github.com/hiagorzandonadi/kobi/releases/latest/download/Kobi-Mac-x64.dmg';
+  const DL_LINUX = 'https://github.com/hiagorzandonadi/kobi/releases/latest/download/Kobi-Linux.AppImage';
+  const DL_LINUX_DEB = 'https://github.com/hiagorzandonadi/kobi/releases/latest/download/Kobi-Linux.deb';
+  /* ============================ */
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const K = (size, mood, extra) => KOBI.svg(Object.assign({ size, mood: mood || 'idle', uid: 'l' + size + (mood || '') + (extra || '') }, extra && typeof extra === 'object' ? extra : {}));
+  document.getElementById('logoKobi').innerHTML = K(34, 'idle', 'logo');
+  document.getElementById('m1').innerHTML = K(48, 'listen', 'm1');
+
+  // expressões e guarda-roupa
+  document.getElementById('moods').innerHTML = Object.entries(KOBI.MOODS).map(([m, l]) => `<div class="mood">${KOBI.svg({ size: 80, mood: m, uid: 'mo' + m })}<span>${l}</span></div>`).join('');
+  const LOOKS = [['crown', 'Coroa', 0], ['headphones', 'Fones', 5], ['santa', 'Natal', 0], ['flower', 'Florzinha', 6], ['party', 'Festa', 8], ['beanie', 'Gorro', 3], ['halo', 'Anjinho', 4], ['horns', 'Diabinho', 7]];
+  document.getElementById('wardrobe').innerHTML = LOOKS.map(([a, n, b]) => { const [, b1, b2] = KOBI.BODIES[b]; return `<div class="mood">${KOBI.svg({ size: 80, mood: 'happy', accessory: a, body: b1, body2: b2, uid: 'wa' + a })}<span>${n}</span></div>`; }).join('');
+  // QR decorativo
+  document.getElementById('fakeqr').innerHTML = Array.from({ length: 81 }, (_, i) => { const x = i % 9, y = Math.floor(i / 9); const fin = (x < 3 && y < 3) || (x > 5 && y < 3) || (x < 3 && y > 5); const on = fin ? !(x % 6 === 1 && y % 6 === 1) : ((x * 7 + y * 13) % 5 < 2); return `<i class="${on ? '' : 'o'}"></i>`; }).join('');
+
+  /* ====== demonstração interativa do entalho ====== */
+  const st = { view: 'home', mood: 'idle', xp: 30, water: 3, playing: true, song: 0, timer: null, chat: [], vol: 60, pos: 0.35, work: null, tasks: [{ t: 'Enviar proposta para o cliente', s: 'hoje · 15:00', d: false }, { t: 'Comprar café e leite', s: 'hoje', d: false }, { t: 'Academia', s: 'hoje · 19:00', d: false }] };
+  const SONGS = [['One For The Road', 'Arctic Monkeys', 'linear-gradient(140deg,#e8533b,#2b1830)'], ['Mine', 'Bazzi', 'linear-gradient(140deg,#5a7cff,#141a40)'], ['Evidências', 'Chitãozinho & Xororó', 'linear-gradient(140deg,#ffb347,#6b2b10)']];
+  const notch = document.getElementById('notch'), pill = document.getElementById('pill'), side = document.getElementById('side'), dmain = document.getElementById('dmain'), desk = document.getElementById('desk');
+  const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+  function toast(t) { const el = document.getElementById('toast'); el.textContent = t; el.style.opacity = 1; clearTimeout(toast.t); toast.t = setTimeout(() => { el.style.opacity = 0; }, 2200); }
+  function xp(n) { const before = Math.floor(st.xp / 50); st.xp += n; if (Math.floor(st.xp / 50) > before) { setMood('success', 2500); toast(`🎉 O Kobi subiu para o nível ${Math.floor(st.xp / 50) + 1}!`); } }
+  function setMood(m, ms) { st.mood = m; clearTimeout(setMood.t); if (ms) setMood.t = setTimeout(() => { st.mood = 'idle'; render(); }, ms); render(); }
+  function renderPill() {
+    let live = '';
+    if (st.work) { const left = Math.max(0, Math.ceil((st.work.end - Date.now()) / 1000)); live = `<span class="live work"><span class="wk">${st.work.icon}</span><span class="nm">${esc(st.work.label)}…</span><span>~${left}s</span></span>`; }
+    else if (st.timer) live = `<span class="live">⏱ <span class="nm">${esc(st.timer.name)}</span><span>${fmt(st.timer.left)}</span></span>`;
+    else if (st.playing) live = `<span class="live"><span class="eq"><b></b><b></b><b></b></span><span class="nm">${esc(SONGS[st.song][0])}</span></span>`;
+    pill.innerHTML = `${K(28, st.mood, 'pill')}<span class="dot"></span>${live}`;
+    if (!notch.classList.contains('open')) notch.style.setProperty('--w', live ? '290px' : '160px');
+    look();
+  }
+  const NAV = [['home', '🏠', 'Início'], ['tasks', '✅', 'Tarefas'], ['habits', '💧', 'Hábitos'], ['timers', '⏱', 'Timers'], ['music', '🎵', 'Música']];
+  function renderSide() {
+    const lvl = Math.floor(st.xp / 50) + 1, pct = (st.xp % 50) * 2;
+    const counts = { tasks: st.tasks.filter((t) => !t.d).length, habits: `${st.water}/8`, timers: st.timer ? 1 : '' };
+    side.innerHTML = `<div class="me">${K(46, st.mood, 'side')}<div><b>Kobi</b><small>● Pronto</small><div class="lv"><em>Nv ${lvl}</em><i><b style="width:${pct}%"></b></i></div></div></div>` +
+      NAV.map(([k, i, l]) => `<button class="nv${st.view === k ? ' on' : ''}" data-v="${k}">${i} ${l}${counts[k] ? `<span class="c">${counts[k]}</span>` : ''}</button>`).join('');
+  }
+  const SUGG = ['toca uma música', 'gera uma imagem de um robô no espaço', 'timer de 1 minuto para o chá', 'cria uma pasta Projetos', 'bebi um copo de água', 'como está o clima?', 'conta uma piada'];
+  function mini() {
+    const [t, a, g] = SONGS[st.song];
+    return `<div class="mini"><div class="top"><div class="art" style="background:${g}">🎵</div><div style="min-width:0"><b>${esc(t)}</b><small>${esc(a)}</small></div></div>
+      <div class="pbar"><i id="pbar" style="width:${st.pos * 100}%"></i></div>
+      <div class="ctl"><button data-mus="vdown" aria-label="Diminuir volume">🔉</button><button data-mus="prev" aria-label="Anterior">⏮</button><button class="pp" data-mus="toggle" aria-label="Tocar ou pausar">${st.playing ? '❚❚' : '▶'}</button><button data-mus="next" aria-label="Próxima">⏭</button><button data-mus="vup" aria-label="Aumentar volume">🔊</button></div>
+      <div class="vrow"><span>${st.vol ? '🔈' : '🔇'}</span><input type="range" min="0" max="100" value="${st.vol}" id="dvol" aria-label="Volume" style="--p:${st.vol}%"><em id="dvolp">${st.vol}%</em></div></div>`;
+  }
+  function vHome() {
+    return `<h4>Olá!</h4><div class="sub">Clique numa sugestão para conversar com o Kobi</div>
+      <div class="ask"><span>Escreva ou fale com o Kobi…</span><button class="mic" data-say="toca uma música" aria-label="Falar"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
+      <div class="chips">${SUGG.map((s) => `<button class="chip" data-say="${esc(s)}">${esc(s)}</button>`).join('')}</div>
+      <div class="hmid"><div class="convo" id="convo">${st.chat.length ? st.chat.map((m) => `<div class="m ${m[0]}">${m[2] ? m[1] : esc(m[1])}</div>`).join('') : '<div style="margin:auto;color:var(--mist);font-size:13px;text-align:center">Oi! Eu sou o Kobi 👋<br>Toque numa sugestão acima.</div>'}</div>${st.playing || st.song ? mini() : ''}</div>`;
+  }
+  function vTasks() {
+    return `<h4>Tarefas</h4><div class="sub">Toque no círculo para concluir (vale XP!)</div>` +
+      st.tasks.map((t, i) => `<div class="row${t.d ? ' done' : ''}"><button class="ck${t.d ? ' on' : ''}" data-task="${i}" aria-label="Concluir"></button><div class="t">${esc(t.t)}<small>${esc(t.s)}</small></div></div>`).join('');
+  }
+  function vHabits() {
+    return `<h4>Hábitos</h4><div class="sub">Pequenas vitórias de hoje</div>
+      <div class="row"><span style="font-size:20px">💧</span><div class="t">Água <small>${st.water}/8 copos${st.water >= 8 ? ' · ✅' : ''}</small><div class="bar"><i style="width:${Math.min(100, st.water / 8 * 100)}%"></i></div></div><button class="rb" data-water="-1">−</button><button class="rb plus" data-water="1">+</button></div>
+      <div class="row"><span style="font-size:20px">📖</span><div class="t">Ler <small>0/1 vez</small><div class="bar"><i style="width:0%"></i></div></div></div>`;
+  }
+  function vTimers() {
+    return `<h4>Timers</h4><div class="sub">O timer aparece correndo ao lado do Kobi no topo</div>
+      <div class="chips" style="margin:0 0 10px">${[['Chá', 1], ['Pizza', 5], ['Foco', 25]].map(([n, m]) => `<button class="chip" data-timer="${m}" data-tn="${n}">${n} · ${m} min</button>`).join('')}</div>
+      ${st.timer ? `<div class="row"><div class="t">${esc(st.timer.name)}<small>correndo</small></div><span class="tm" id="tmv">${fmt(st.timer.left)}</span><button class="rb" data-stop="1">✕</button></div>` : '<div class="sub">Nenhum timer. Escolha um acima.</div>'}`;
+  }
+  function vMusic() {
+    const [t, a, g] = SONGS[st.song];
+    return `<h4>Música</h4><div class="sub">Spotify</div><div class="player"><div class="art" style="background:${g}">🎵</div><div><b>${esc(t)}</b><span>${esc(a)}</span>
+      <div class="ctl"><button data-mus="prev" aria-label="Anterior">⏮</button><button class="pp" data-mus="toggle" aria-label="Tocar ou pausar">${st.playing ? '❚❚' : '▶'}</button><button data-mus="next" aria-label="Próxima">⏭</button></div></div></div>`;
+  }
+  const VIEWS = { home: vHome, tasks: vTasks, habits: vHabits, timers: vTimers, music: vMusic };
+  function render() { renderPill(); if (notch.classList.contains('open')) { renderSide(); dmain.innerHTML = VIEWS[st.view](); const c = document.getElementById('convo'); if (c) c.scrollTop = c.scrollHeight; } document.getElementById('wWater').textContent = `${st.water}/8`; look(); }
+  function say(text) {
+    st.chat.push(['u', text]); let r = '', m = 'happy';
+    if (/toca/.test(text)) { st.playing = true; r = `Tocando ${SONGS[st.song][0]} – ${SONGS[st.song][1]} 🎶`; }
+    else if (/timer/.test(text)) { startTimer(1, 'chá'); r = 'Timer "chá" de 1 minuto iniciado! Olha ele lá no topo. ☕'; }
+    else if (/água/.test(text)) { st.water = Math.min(8, st.water + 1); xp(5); r = `Boa! ${st.water}/8 copos hoje. 💧`; m = 'love'; }
+    else if (/15%/.test(text)) { r = '15% de 230 = 34,5'; m = 'cool'; }
+    else if (/tarefa/.test(text)) { st.tasks.push({ t: 'Ligar pra mãe', s: 'hoje', d: false }); r = 'Tarefa criada: "ligar pra mãe" ✅'; m = 'success'; }
+    else if (/imagem/.test(text)) { return work(text, '🎨', 'Desenhando', 5, ['Pronto! Desenhei um robô no espaço 🚀<div class="gen"></div>', 1], 'love'); }
+    else if (/pasta/.test(text)) { return work(text, '📁', 'Criando pasta', 2, 'Pasta "Projetos" criada na Área de Trabalho 📁', 'success'); }
+    else if (/clima/.test(text)) { return work(text, '🌤️', 'Vendo o clima', 2, 'Agora faz 27°C e céu limpo ☀️. Máxima de 31°C.', 'cool'); }
+    else if (/piada/.test(text)) { r = 'Por que o Wi-Fi terminou o namoro? Faltou conexão. 😄'; m = 'laugh'; }
+    setMood('think'); render();
+    setTimeout(() => { st.chat.push(['k', r]); st.chat = st.chat.slice(-8); setMood(m, 3000); }, 650);
+  }
+  // pedidos que levam um tempinho: o Kobi mostra no topo o que está fazendo e quanto falta
+  function work(text, icon, label, secs, reply, mood) {
+    st.work = { icon, label, end: Date.now() + secs * 1000 }; setMood('think');
+    setTimeout(() => { st.work = null; const [t, html] = Array.isArray(reply) ? reply : [reply, 0]; st.chat.push(['k', t, html]); st.chat = st.chat.slice(-8); xp(5); setMood(mood, 3000); }, secs * 1000);
+  }
+  function startTimer(min, name) { st.timer = { name, left: min * 60 }; }
+  setInterval(() => { if (!st.timer) return; st.timer.left--; if (st.timer.left <= 0) { toast(`⏰ O timer "${st.timer.name}" terminou!`); st.timer = null; setMood('surprised', 2500); xp(10); } const v = document.getElementById('tmv'); if (v && st.timer) v.textContent = fmt(st.timer.left); renderPill(); }, 1000);
+
+  let closeT = null;
+  function openNotch() { clearTimeout(closeT); if (notch.classList.contains('open')) return; notch.classList.add('open'); notch.style.removeProperty('--w'); desk.classList.add('active'); render(); }
+  function closeNotch() { notch.classList.remove('open'); render(); }
+  notch.addEventListener('mouseenter', openNotch);
+  const touchy = matchMedia('(hover: none), (pointer: coarse)').matches;
+  notch.addEventListener('mouseleave', () => { if (touchy) return; closeT = setTimeout(closeNotch, 700); });
+  pill.addEventListener('click', openNotch);
+  desk.addEventListener('click', (e) => { if (!e.composedPath().includes(notch)) closeNotch(); });
+  notch.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return; const d = b.dataset;
+    if (d.v) { st.view = d.v; }
+    if (d.say) say(d.say);
+    if (d.task !== undefined) { const t = st.tasks[d.task]; t.d = !t.d; if (t.d) { xp(10); setMood('success', 2000); toast('✅ Tarefa concluída · +10 XP'); } }
+    if (d.water) { st.water = Math.max(0, Math.min(8, st.water + Number(d.water))); if (d.water > 0) { xp(5); setMood('happy', 1500); } }
+    if (d.timer) { startTimer(Number(d.timer), d.tn); toast(`⏱ Timer "${d.tn}" iniciado`); }
+    if (d.stop) st.timer = null;
+    if (d.mus === 'toggle') st.playing = !st.playing;
+    if (d.mus === 'vup' || d.mus === 'vdown') { st.vol = Math.max(0, Math.min(100, st.vol + (d.mus === 'vup' ? 10 : -10))); toast(`🔊 Volume ${st.vol}%`); }
+    if (d.mus === 'next') { st.song = (st.song + 1) % SONGS.length; st.playing = true; }
+    if (d.mus === 'prev') { st.song = (st.song + SONGS.length - 1) % SONGS.length; st.playing = true; }
+    render();
+  });
+
+  notch.addEventListener('input', (e) => { if (e.target.id !== 'dvol') return; st.vol = Number(e.target.value); e.target.style.setProperty('--p', st.vol + '%'); document.getElementById('dvolp').textContent = st.vol + '%'; });
+  setInterval(() => { if (st.work) renderPill(); if (st.playing) { st.pos = (st.pos + 0.01) % 1; const p = document.getElementById('pbar'); if (p) p.style.width = st.pos * 100 + '%'; } }, 1000);
+  // olhos seguem o mouse (bem pouquinho)
+  let mx = innerWidth / 2, my = 0;
+  function look() { KOBI_LOOK(); }
+  function KOBI_LOOK() { document.querySelectorAll('[data-eyes]').forEach((g) => { const r = g.ownerSVGElement.getBoundingClientRect(); const dx = mx - (r.left + r.width / 2), dy = my - (r.top + r.height / 2); const len = Math.hypot(dx, dy) || 1, k = Math.min(1, len / 400); g.setAttribute('transform', `translate(${(dx / len * 1.8 * k).toFixed(2)} ${(dy / len * 1.4 * k).toFixed(2)})`); }); }
+  addEventListener('pointermove', (e) => { mx = e.clientX; my = e.clientY; requestAnimationFrame(KOBI_LOOK); }, { passive: true });
+  function clock() { const d = new Date(); document.getElementById('clk').textContent = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; document.getElementById('dte').textContent = d.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'short' }); }
+  clock(); setInterval(clock, 15000); render();
+
+  /* ====== compra ====== */
+  const modal = document.getElementById('modal'), mstep = document.getElementById('mstep');
+  let method = 'pix';
+  function step1() {
+    mstep.innerHTML = `<div style="display:flex;gap:14px;align-items:center">${K(64, 'love', 'buy')}<div><h3 id="mt">Kobi · licença vitalícia</h3><div style="color:var(--mist)">Pagamento único de <b style="color:var(--ink)">R$ 89,90</b></div></div></div>
+      <div class="methods"><button class="method${method === 'pix' ? ' on' : ''}" data-m="pix"><b>PIX</b><span>Aprovação na hora</span></button><button class="method${method === 'card' ? ' on' : ''}" data-m="card"><b>Cartão</b><span>Crédito ou débito</span></button></div>
+      <div class="paybox" id="paybox"></div>`;
+    renderPay();
+  }
+  function renderPay() {
+    const box = document.getElementById('paybox');
+    if (method === 'card') {
+      box.innerHTML = CARD_URL ? `<a class="btn btn-primary" style="width:100%" href="${esc(CARD_URL)}" target="_blank" rel="noopener">Pagar com cartão</a><div class="fine">Você será levado ao pagamento seguro.</div>` : '<div class="fine">O pagamento com cartão estará disponível em breve. Use o PIX.</div>';
+      return;
+    }
+    box.innerHTML = `<div id="pixqr">${PIX_KEY ? '' : 'QR Code do PIX<br>aparece aqui'}</div>
+      <div style="width:100%"><div class="fine" style="margin:0 0 6px">Chave PIX (${esc(PIX_NAME)})</div><div class="key" id="pixkey">${esc(PIX_KEY || 'sua-chave-pix-aqui')}</div></div>
+      <button class="btn btn-ghost" id="copy" style="width:100%">Copiar chave PIX</button>
+      <div class="field"><label for="buyer">Seu e-mail para receber o Kobi</label><input id="buyer" type="email" placeholder="voce@email.com" autocomplete="email"></div>
+      <button class="btn btn-primary" id="paid" style="width:100%">Já paguei</button>
+      <div class="fine" id="pmsg">Depois de pagar R$ 89,90, toque em "Já paguei".</div>`;
+    if (PIX_KEY && window.QRCode) new QRCode(document.getElementById('pixqr'), { text: PIX_KEY, width: 160, height: 160 });
+  }
+  function stepDownload() {
+    mstep.innerHTML = `<div style="display:flex;gap:14px;align-items:center">${K(64, 'love', 'dl')}<div><h3 id="mt">Baixar o Kobi</h3><div style="color:var(--mist)">Windows 10 e 11 · Mac · Linux</div></div></div>
+      <div style="display:grid;gap:10px;margin-top:18px">
+        <a class="btn btn-primary" style="width:100%" href="${esc(DL_SETUP)}">⬇ Instalador para Windows (recomendado)</a>
+        <a class="btn btn-ghost" style="width:100%" href="${esc(DL_PORTABLE)}">Versão portátil (sem instalar)</a>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><a class="btn btn-ghost" href="${esc(DL_MAC_ARM)}"> Mac (M1, M2, M3, M4, M5)</a><a class="btn btn-ghost" href="${esc(DL_MAC_INTEL)}"> Mac Intel</a></div>
+        ${DL_LINUX.startsWith('http') ? `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><a class="btn btn-ghost" href="${esc(DL_LINUX)}">🐧 Linux (AppImage)</a><a class="btn btn-ghost" href="${esc(DL_LINUX_DEB)}">🐧 Linux (.deb Ubuntu/Debian)</a></div>` : ''}
+      </div>
+      <div class="fine" style="margin-top:14px"><b>Windows:</b> se aparecer "O Windows protegeu o computador", clique em <b>Mais informações → Executar assim mesmo</b>.<br><b>Mac:</b> abra o .dmg, arraste o Kobi para Aplicativos e, na primeira vez, clique nele com o <b>botão direito → Abrir</b>. Se o Mac não deixar, vá em <b>Ajustes do Sistema → Privacidade e Segurança → Abrir Mesmo Assim</b>. Isso acontece com apps novos ainda sem assinatura da Apple.${DL_LINUX.startsWith('http') ? '<br><b>Linux:</b> no AppImage, clique com o botão direito → Propriedades → marque <b>Permitir executar</b> e abra. No Ubuntu/Debian, o .deb instala com dois cliques.' : ''}</div>`;
+  }
+  function stepCheckout() {
+    mstep.innerHTML = `<div style="display:flex;gap:14px;align-items:center">${K(64, 'love', 'buy')}<div><h3 id="mt">Kobi · licença vitalícia</h3><div style="color:var(--mist)">Pagamento único de <b style="color:var(--ink)">R$ 89,90</b> · sem mensalidade</div></div></div>
+      <div style="display:grid;gap:10px;margin-top:18px">${/^https:/.test(CHECKOUT_URL) ? `<a class="btn btn-primary" style="width:100%" href="${esc(CHECKOUT_URL)}" target="_blank" rel="noopener">Pagar com PIX ou cartão</a>` : '<div class="fine">As vendas abrem em instantes. Volte daqui a pouco.</div>'}</div>
+      <div class="fine" style="margin-top:14px">O pagamento é feito na Cakto, com segurança. Assim que for aprovado, o link para baixar o Kobi chega no seu e-mail.</div>`;
+  }
+  // compra pelo Mercado Pago: tela de escolha do próprio site (comprar.html), levando junto ?cupom=… e utm se tiver
+  const COMPRAR_URL = 'creator-comprar.html';
+  document.querySelectorAll('[data-buy]').forEach((b) => b.addEventListener('click', () => { if (COMPRAR_URL) { location.href = COMPRAR_URL + KCQ; return; } if (/^https:/.test(CHECKOUT_URL)) { window.open(CHECKOUT_URL, '_blank', 'noopener'); return; } modal.hidden = false; stepCheckout(); }));
+  document.getElementById('mx').onclick = () => { modal.hidden = true; };
+  modal.addEventListener('click', async (e) => {
+    if (e.target === modal) { modal.hidden = true; return; }
+    const m = e.target.closest('[data-m]'); if (m) { method = m.dataset.m; step1(); return; }
+    if (e.target.id === 'copy') { const k = document.getElementById('pixkey'); try { await navigator.clipboard.writeText(k.textContent); e.target.textContent = 'Chave copiada ✓'; } catch { const r = document.createRange(); r.selectNodeContents(k); const s = getSelection(); s.removeAllRanges(); s.addRange(r); e.target.textContent = 'Selecionei a chave: copie com Ctrl+C'; } }
+    if (e.target.id === 'paid') {
+      const em = document.getElementById('buyer'); if (!em.value || !em.checkValidity()) { document.getElementById('pmsg').textContent = 'Digite um e-mail válido para receber o link.'; em.focus(); return; }
+      mstep.innerHTML = `<div style="text-align:center">${K(110, 'success', 'ok')}<h3 style="margin-top:10px">Obrigado! 💚</h3><p style="color:var(--mist);margin-top:8px">Assim que o pagamento for confirmado, enviamos o link de download para <b style="color:var(--ink)">${esc(em.value)}</b>. Dúvidas: ${esc(CONTACT)}</p></div>`;
+    }
+  });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') modal.hidden = true; });
+
+  // Kobi que sai do logo quando você desce a página, segue o mouse e fala umas besteiras
+  (function buddy() {
+    const logo = document.getElementById('logoKobi'), desk = document.querySelector('.desk');
+    const el = document.createElement('div'); el.id = 'buddy'; el.setAttribute('aria-hidden', 'true');
+    el.innerHTML = `<svg class="bd-chair" viewBox="0 0 60 50" aria-hidden="true"><g stroke="#8a5a2b" stroke-width="3" stroke-linecap="round"><line x1="10" y1="48" x2="40" y2="14"/><line x1="44" y1="48" x2="22" y2="26"/><line x1="8" y1="34" x2="50" y2="34"/></g><path d="M14 30 L40 12 L46 18 L22 34 Z" fill="#ff7ac8"/><path d="M18 27 L42 10 M22 30 L45 14" stroke="#fff" stroke-width="2.5" opacity=".85"/></svg><div class="bd-body"></div><div class="bd-bub"></div>`;
+    document.body.appendChild(el);
+    const body = el.querySelector('.bd-body'), bub = el.querySelector('.bd-bub');
+    let chilling = false;
+    const CHILL = ['Vou esperar aqui 🏖️', 'Me chama quando sair daí 😎', 'Pausa merecida ☀️', 'Pode explorar, eu espero 🍹'];
+    function chill(on) {
+      if (on === chilling) return; chilling = on;
+      el.classList.toggle('chill', on); setMood(on ? 'cool' : 'happy');
+      if (on) { forced = true; say(CHILL[Math.floor(Math.random() * CHILL.length)], 2600); }
+    }
+    let mood = '';
+    const setMood = (m) => { if (m !== mood) { mood = m; body.innerHTML = KOBI.svg({ size: 46, mood: m, uid: 'bd' + m }); } };
+    setMood('happy');
+    const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const cheap = Date.now() < new Date('2026-11-15T19:00:00-03:00').getTime();
+    const LINES = ['Compra… compra… 👀', 'Psiu! R$ 89,90 uma vez só', 'Sem mensalidade, hein!', 'Tô te seguindo, percebeu? 😄', 'Me leva pra casa 🥺', 'Prometo não pedir aumento', 'Eu toco suas músicas 🎵', 'O botão verde não morde…', 'Já me imaginou no seu PC?', 'Pode me chamar de Sexta-Feira 😎', 'Compra… compra… compra…', 'Eu lembro seus compromissos. Lembra de me comprar? 😏', 'Sou fofo E útil. Raro, né?']
+      .concat(['Só mais 50 acessos nesse preço! 🔥']);
+    let li = Math.floor(Math.random() * LINES.length), bubT = 0, forced = false;
+    const say = (t, ms) => { bub.textContent = t; el.classList.add('talk'); clearTimeout(bubT); bubT = setTimeout(() => { el.classList.remove('talk'); forced = false; }, ms || 3200); };
+    setInterval(() => { if (el.classList.contains('on') && !forced) { say(LINES[li++ % LINES.length]); } }, 5200);
+
+    let mx = innerWidth * 0.6, my = innerHeight * 0.5, x = 0, y = 0, out = false, tilt = 0, face = 1;
+    addEventListener('mousemove', (e) => { mx = e.clientX; my = e.clientY; }, { passive: true });
+    const home = () => { const r = logo.getBoundingClientRect(); return [r.left + r.width / 2 - 23, r.top + r.height / 2 - 23]; };
+    [x, y] = home();
+    const onScroll = () => {
+      const want = scrollY > 160;
+      if (want === out) return;
+      out = want; el.classList.toggle('on', out); logo.style.opacity = out ? '0' : '';
+      if (out) { setTimeout(() => say(LINES[li++ % LINES.length]), 700); } else el.classList.remove('talk');
+    };
+    addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+    document.querySelectorAll('[data-buy]').forEach((b) => {
+      b.addEventListener('mouseenter', () => { if (!out) return; forced = true; setMood('love'); say('ISSO! Clica aí! 🎉', 2200); });
+      b.addEventListener('mouseleave', () => setMood('happy'));
+    });
+
+    let t0 = performance.now();
+    (function frame(now) {
+      const dt = Math.min(50, now - t0); t0 = now;
+      let tx, ty;
+      if (!out || !fine || calm) chill(false);
+      if (!out) { [tx, ty] = home(); }
+      else if (fine && !calm) {
+        tx = mx + 26; ty = my + 18;
+        // mouse dentro do quadro da demonstração: ele vai pro canto de fora, tira a cadeira de praia e descansa
+        const d = desk && desk.getBoundingClientRect();
+        const inside = d && mx > d.left && mx < d.right && my > d.top && my < d.bottom;
+        if (inside) {
+          const roomRight = innerWidth - d.right > 70;
+          tx = roomRight ? d.right + 12 : d.left - 58; ty = Math.min(d.bottom, innerHeight) - 56;
+          if (!roomRight && d.left < 70) { tx = innerWidth - 70; }
+        }
+        chill(inside && Math.hypot(tx - x, ty - y) < 30);
+      }
+      else { tx = 14; ty = innerHeight - 74; }
+      tx = Math.max(6, Math.min(innerWidth - 56, tx)); ty = Math.max(6, Math.min(innerHeight - 56, ty));
+      const k = calm ? 1 : 1 - Math.pow(0.88, dt / 16);
+      const dx = (tx - x) * k; x += dx; y += (ty - y) * k;
+      if (Math.abs(dx) > 0.6) face = dx > 0 ? 1 : -1;
+      tilt += (Math.max(-18, Math.min(18, dx * 2)) - tilt) * 0.2;
+      const bob = calm || !out || chilling ? 0 : Math.sin(now / 260) * 4;
+      if (chilling) { face = 1; tilt = 0; }
+      el.style.transform = `translate(${x}px, ${y + bob}px)`;
+      body.style.transform = `scaleX(${face}) rotate(${tilt * face}deg)`;
+      el.classList.toggle('left', x > innerWidth - 230);
+      requestAnimationFrame(frame);
+    })(t0);
+  })();
+</script>

@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kobi Creators</title><meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="kobi-icon.png"><link rel="apple-touch-icon" href="kobi-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap">
+<style>
+:root{--bg:#F5F7FB;--card:#fff;--ink:#121528;--mist:#636A85;--line:#E3E7F0;--green:#3FB60F;--green-d:#2E8F08;--green-bg:#EEF9E7;--vio:#6B4CFF;--vio-bg:#F0ECFF;--bad:#D93636}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
+a{color:var(--vio)}
+.top{background:var(--ink);color:#fff}.top .in{max-width:860px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}.brand img{width:34px;height:34px;border-radius:10px}
+.brand span{color:#9BF35A}
+.top button{background:transparent;color:#cfd2e6;border:1px solid #3a3e5c;border-radius:10px;padding:7px 12px;font:inherit;font-size:13px;cursor:pointer}
+.wrap{max-width:860px;margin:0 auto;padding:22px 16px 70px}
+.hero{background:linear-gradient(135deg,#121528,#2b1d6e);color:#fff;border-radius:22px;padding:28px 24px;margin-bottom:18px;position:relative;overflow:hidden}
+.hero h1{margin:0 0 6px;font-size:28px;line-height:1.15}.hero p{margin:0;color:#cfd2e6;max-width:560px}
+.hero .pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.hero .pills b{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:6px 12px;font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 20px;margin-bottom:16px}
+.card h2{margin:0 0 4px;font-size:19px}.card .sub{color:var(--mist);margin:0 0 14px}
+.num{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;font-size:13px;font-weight:800;margin-right:8px;vertical-align:2px}
+label{display:block;font-weight:700;font-size:13.5px;margin:12px 0 6px}
+input{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;font:inherit;background:#fff;color:var(--ink)}input:focus{outline:none;border-color:var(--vio)}
+.pre{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}.pre span{padding:12px 0 12px 14px;color:var(--mist);white-space:nowrap}.pre input{border:0;padding-left:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:13px 18px;font:inherit;font-weight:800;cursor:pointer;text-decoration:none}
+.btn-p{background:var(--green);color:#fff}.btn-p:hover{background:var(--green-d)}.btn-g{background:var(--bg);color:var(--ink);border:1.5px solid var(--line)}.btn-v{background:var(--vio);color:#fff}
+.btn[disabled]{opacity:.6;cursor:wait}
+.msg{min-height:20px;margin-top:10px;font-weight:600;font-size:14px}.msg.err{color:var(--bad)}.msg.ok{color:var(--green-d)}
+.link{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:var(--green-bg);border:1.5px solid #cdeeb9;border-radius:14px;padding:14px;margin-top:14px}
+.link b{font-size:17px;word-break:break-all;flex:1;min-width:200px}
+.steps{list-style:none;padding:0;margin:0;display:grid;gap:14px}.steps li{display:flex;gap:12px}.steps li .num{flex:none;margin:0}
+.steps p{margin:2px 0 0;color:var(--mist)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.tile{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:14px}.tile b{display:block;font-size:22px}.tile span{color:var(--mist);font-size:13.5px}
+.copy{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;white-space:pre-wrap;font-size:14px;margin:8px 0}
+.note{background:var(--vio-bg);border-radius:12px;padding:12px 14px;font-size:14px;margin-top:12px}
+.login{max-width:420px;margin:40px auto}
+details{border-top:1px solid var(--line);padding:12px 0}details:first-of-type{border-top:0}summary{cursor:pointer;font-weight:700}details p{color:var(--mist);margin:8px 0 0}
+img.banner{width:100%;border-radius:14px;display:block;margin-top:8px}
+[hidden]{display:none!important}
+</style></head><body>
+<div class="top"><div class="in"><div class="brand"><img src="kobi-icon.png" alt="">Kobi <span>Creators</span></div><button id="sair" hidden>Sair</button></div></div>
+
+<div class="wrap">
+<!-- login -->
+<section id="vLogin" class="login" hidden>
+  <div class="card">
+    <h2>Entrar no portal</h2><p class="sub">Use o e-mail e a senha que o time do Kobi te mandou.</p>
+    <label for="le">E-mail</label><input id="le" type="email" autocomplete="username" placeholder="seu@email.com">
+    <label for="ls">Senha</label><input id="ls" type="password" autocomplete="current-password" placeholder="Senha">
+    <button class="btn btn-p" id="lgo" style="width:100%;margin-top:16px">Entrar</button>
+    <div class="msg err" id="lmsg"></div>
+    <p class="sub" style="margin:10px 0 0;font-size:13.5px">Ainda não é creator? Chama a gente no Instagram <a href="https://instagram.com/kobi.ia" target="_blank" rel="noopener">@kobi.ia</a>.</p>
+  </div>
+</section>
+
+<!-- o que é o Kobi (aparece no login e no portal) -->
+<div class="card" id="sobre" hidden>
+  <h2>🤖 O que é o Kobi?</h2>
+  <p class="sub">Um assistente com inteligência artificial que fica no topo da tela do PC, tipo o J.A.R.V.I.S. do Homem de Ferro.</p>
+  <ol class="steps">
+    <li><span class="num">🎙️</span><div><b>Fala por voz</b><p>A pessoa conversa com o Kobi falando, e ele responde em voz alta, em português.</p></div></li>
+    <li><span class="num">⚡</span><div><b>Faz as coisas no PC</b><p>Abre programas e sites, tira dúvidas, ajuda no trabalho, nos estudos e nos games.</p></div></li>
+    <li><span class="num">🖥️</span><div><b>Sempre à mão</b><p>Fica discreto no topo da tela, como a ilha do iPhone. Funciona no Windows e no Mac.</p></div></li>
+  </ol>
+  <div class="grid" style="margin-top:16px">
+    <div class="tile"><b>+R$ 50 mil</b><span>faturados nas primeiras 2 semanas de lançamento.</span></div>
+    <div class="tile"><b>Vende fácil</b><span>quem vê o Kobi respondendo por voz já quer ter. Dá vídeo que prende.</span></div>
+    <div class="tile"><b>R$ 89,90</b><span>pagamento único e vitalício, mais os combos com a voz do J.A.R.V.I.S.</span></div>
+  </div>
+  <a class="btn btn-g" href="https://kobiia.com.br" target="_blank" rel="noopener" style="margin-top:14px">Ver o Kobi funcionando →</a>
+</div>
+
+<!-- portal -->
+<section id="vPortal" hidden>
+  <div class="hero">
+    <h1>Fala, <span id="hNome">creator</span>! 🤖🔥</h1>
+    <p>Bem-vindo ao <b>Kobi Creators</b>. Aqui você monta sua página de vendas, pega seu link e começa a ganhar comissão em cada Kobi vendido.</p>
+    <div class="pills"><b>💰 30% por venda</b><b>🔗 Página com seu nome</b><b>🎁 Kobi liberado pra você</b></div>
+  </div>
+
+  <div class="card" id="cLink">
+    <h2>🔗 Sua página de vendas</h2>
+    <p class="sub" id="lkSub">Escolha o nome do seu link e cole seu código de afiliado da Cakto (passo a passo logo abaixo).</p>
+    <label for="slug">Nome do seu link</label>
+    <div class="pre"><span>kobiia.com.br/</span><input id="slug" placeholder="seunome" maxlength="30" autocapitalize="off" spellcheck="false"></div>
+    <label for="aff">Seu link (ou código) de afiliado da Cakto</label>
+    <input id="aff" placeholder="https://pay.cakto.com.br/...?affiliate=XXXXXX" spellcheck="false">
+    <button class="btn btn-p" id="salvar" style="margin-top:14px">Salvar minha página</button>
+    <div class="msg" id="smsg"></div>
+    <div class="link" id="meuLink" hidden><b id="url"></b><button class="btn btn-v" id="cp">Copiar link</button><a class="btn btn-g" id="abrir" target="_blank" rel="noopener">Abrir</a></div>
+  </div>
+
+  <div class="card">
+    <h2>💰 Como funciona</h2>
+    <p class="sub">Simples: alguém compra pelo seu link, você ganha.</p>
+    <div class="grid">
+      <div class="tile"><b>30%</b><span>de comissão em cada venda feita pela sua página, inclusive nos combos com a voz do J.A.R.V.I.S.</span></div>
+      <div class="tile"><b>30 dias</b><span>de cookie: se a pessoa clicar no seu link e comprar em até 30 dias, a venda é sua.</span></div>
+      <div class="tile"><b>Cakto</b><span>paga direto pra você. As vendas e comissões aparecem em tempo real no seu painel da Cakto.</span></div>
+    </div>
+    <div class="note">O preço e as promoções da sua página são sempre os mesmos do site oficial (ex.: Black Friday). Você não precisa atualizar nada.</div>
+  </div>
+
+  <div class="card">
+    <h2>🧾 Passo a passo na Cakto</h2>
+    <p class="sub">Leva uns 5 minutos e só precisa fazer uma vez.</p>
+    <ol class="steps">
+      <li><span class="num">1</span><div><b>Crie sua conta na Cakto (é grátis)</b><p>Entre em <a href="https://app.cakto.com.br/" target="_blank" rel="noopener">cakto.com.br</a> e cadastre-se com seus dados. Complete a parte de dados bancários/PIX pra conseguir sacar as comissões.</p></div></li>
+      <li><span class="num">2</span><div><b>Peça afiliação ao Kobi</b><p>Já logado na Cakto, abra o convite abaixo e clique em <b>Afiliar-se</b>.</p><a class="btn btn-v" href="https://app.cakto.com.br/affiliate/invite/32b97df8-0d56-4c32-bf9d-f3eef3e1d711" target="_blank" rel="noopener" style="margin-top:8px">Abrir convite de afiliado do Kobi</a></div></li>
+      <li><span class="num">3</span><div><b>Copie seu link de afiliado</b><p>Na Cakto, vá em <b>Produtos → Minhas Afiliações → Kobi</b> e copie o seu link de divulgação. Ele termina com <b>?affiliate=</b> e um código, tipo <code>tpwmYhyD</code>.</p></div></li>
+      <li><span class="num">4</span><div><b>Cole aqui em cima e salve</b><p>Escolha o nome da sua página (ex.: <b>kobiia.com.br/seunome</b>), cole o link e clique em <b>Salvar</b>. Pronto: toda compra pela sua página cai como venda sua.</p></div></li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>🎬 Material pra divulgar</h2>
+    <p class="sub">Use à vontade. O que mais vende é mostrar o Kobi funcionando de verdade na sua tela.</p>
+    <label>Bio do Instagram / TikTok</label>
+    <div class="copy" id="tBio">🤖 Meu assistente com IA no PC: <span class="L">kobiia.com.br/seunome</span></div>
+    <label>Story / legenda</label>
+    <div class="copy" id="tStory">Esse é o Kobi 🤖 um assistente com IA que fica no topo da tela do PC. Eu falo com ele por voz, tipo o J.A.R.V.I.S., e ele abre programas, responde dúvidas e me ajuda no dia a dia. Tudo em português 🇧🇷
+Link aqui 👉 <span class="L">kobiia.com.br/seunome</span></div>
+    <label>Ideias de vídeo</label>
+    <div class="copy">1. "Transformei meu PC no computador do Homem de Ferro" — mostre você falando com o Kobi e ele respondendo por voz.
+2. "3 coisas que meu assistente de IA faz no PC" — abrir app, tirar dúvida, ajudar no game.
+3. Antes e depois do setup: tela comum → tela com o Kobi no topo.
+4. Reação: pergunte algo difícil pro Kobi e mostre a resposta ao vivo.</div>
+    <label>Arte</label>
+    <img class="banner" src="parceria-kobi.png" alt="Arte Kobi Creators">
+    <a class="btn btn-g" href="parceria-kobi.png" download style="margin-top:10px">Baixar arte</a>
+  </div>
+
+  <div class="card">
+    <h2>❓ Dúvidas</h2>
+    <details><summary>Quando recebo minha comissão?</summary><p>A Cakto libera o valor no seu saldo conforme o prazo dela (PIX costuma ser mais rápido que cartão). Você acompanha e saca pelo painel da Cakto.</p></details>
+    <details><summary>Posso mudar o nome do meu link depois?</summary><p>Pode. É só trocar aqui e salvar. O link antigo para de funcionar, então lembre de atualizar sua bio.</p></details>
+    <details><summary>Como uso o Kobi pra gravar?</summary><p>Seu Kobi já está liberado no e-mail que você usa aqui. Baixe em <a href="https://kobiia.com.br" target="_blank" rel="noopener">kobiia.com.br</a> e ative com esse e-mail.</p></details>
+    <details><summary>Falar com o time do Kobi</summary><p>Chama no Instagram <a href="https://instagram.com/kobi.ia" target="_blank" rel="noopener">@kobi.ia</a> ou responda o e-mail da parceria.</p></details>
+  </div>
+</section>
+</div>
+
+<script>
+(function(){
+  var API='https://kobi-licencas.hiagorzandonadi.workers.dev', K='kobiCreator', tok='', me=null;
+  var BASE=location.hostname.endsWith('github.io')?location.origin+'/kobi/':location.origin+'/';
+  var SITE=location.hostname.endsWith('github.io')?'https://kobiia.com.br/':BASE;
+  var $=function(id){return document.getElementById(id)};
+  try{tok=localStorage.getItem(K)||''}catch(e){}
+  function post(p,b){return fetch(API+p,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(b)}).then(function(r){return r.json().then(function(j){j._s=r.status;return j})})}
+  function ver(v){$('vLogin').hidden=v!=='login';$('vPortal').hidden=v!=='portal';$('sair').hidden=v!=='portal';
+    var s=$('sobre');s.hidden=false;if(v==='portal'){var h=document.querySelector('.hero');h.parentNode.insertBefore(s,h.nextSibling)}else{$('vLogin').appendChild(s)}}
+  function login(m){ver('login');$('lmsg').textContent=m||'';setTimeout(function(){$('le').focus()},50)}
+  function pinta(c){
+    me=c;$('hNome').textContent=(c.nome||'creator').split(' ')[0];
+    $('slug').value=c.slug||'';$('aff').value=c.aff||'';
+    var u=c.slug?SITE.replace(/^https?:\/\//,'')+c.slug:'';
+    [].forEach.call(document.querySelectorAll('.L'),function(s){s.textContent=u||'kobiia.com.br/seunome'});
+    if(c.slug&&c.aff){$('meuLink').hidden=false;$('url').textContent=u;$('abrir').href=SITE+c.slug;$('lkSub').textContent='Sua página está no ar. Coloque esse link na bio e nos stories.'}
+    else{$('meuLink').hidden=true}
+    ver('portal');
+  }
+  function entrar(){
+    var e=$('le').value.trim(),s=$('ls').value;if(!e||!s){$('lmsg').textContent='Preencha e-mail e senha.';return}
+    var b=$('lgo');b.disabled=true;
+    post('/creators/login',{email:e,senha:s}).then(function(j){b.disabled=false;if(!j.ok){$('lmsg').textContent=j.error||'Não deu certo.';return}
+      tok=j.token;try{localStorage.setItem(K,tok)}catch(x){}pinta(j.creator)}).catch(function(){b.disabled=false;$('lmsg').textContent='Sem conexão. Tente de novo.'});
+  }
+  $('lgo').onclick=entrar;$('ls').onkeydown=function(e){if(e.key==='Enter')entrar()};
+  $('sair').onclick=function(){post('/creators/sair',{token:tok}).catch(function(){});tok='';try{localStorage.removeItem(K)}catch(e){}login()};
+  $('slug').oninput=function(){var v=this.value.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9-]/g,'');if(v!==this.value)this.value=v};
+  $('salvar').onclick=function(){
+    var m=$('smsg'),b=this;m.className='msg';m.textContent='';b.disabled=true;
+    post('/creators/salvar',{token:tok,slug:$('slug').value.trim(),aff:$('aff').value.trim()}).then(function(j){b.disabled=false;
+      if(j._s===401){login('Sua sessão expirou. Entre de novo.');return}
+      if(!j.ok){m.className='msg err';m.textContent=j.error||'Não deu certo.';return}
+      m.className='msg ok';m.textContent='Salvo! Sua página já está no ar 🚀';pinta(j.creator)}).catch(function(){b.disabled=false;m.className='msg err';m.textContent='Sem conexão. Tente de novo.'});
+  };
+  $('cp').onclick=function(){var t='https://'+$('url').textContent,b=this;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Copiado!'},function(){prompt('Copie o link:',t)});setTimeout(function(){b.textContent='Copiar link'},2000)};
+  if(!tok)return login();
+  post('/creators/eu',{token:tok}).then(function(j){if(j.ok)pinta(j.creator);else{try{localStorage.removeItem(K)}catch(e){}login()}}).catch(function(){login('Sem conexão. Tente de novo.')});
+})();
+</script>
+</body></html>
