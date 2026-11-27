@@ -1,0 +1,34 @@
+name: espelho-do-site
+# Copia o site de hiagorzandonadi/kobi (o link antigo continua igual) e publica em kobiia.com.br.
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: hiagorzandonadi/kobi
+          path: site
+      - name: Preparar
+        run: |
+          rm -rf site/.git site/.github
+          echo "kobiia.com.br" > site/CNAME
+          touch site/.nojekyll
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - uses: actions/deploy-pages@v4
