@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Seu Kobi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #F5F7FB; --card: #FFFFFF; --ink: #121528; --mist: #636A85; --line: #E3E7F0; --green: #3FB60F; --green-d: #2E8F08; --green-bg: #EEF9E7; --sky: #0EA5D8; --warn: #B86E00; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 'Plus Jakarta Sans', system-ui, sans-serif; }
+  .top { background: var(--card); border-bottom: 1px solid var(--line); }
+  .top .in { max-width: 600px; margin: 0 auto; padding: 14px 16px; display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 19px; }
+  .top i { width: 34px; height: 34px; border-radius: 10px; background: #121528; display: grid; place-items: center; font-style: normal; color: #9BF35A; font-size: 14px; letter-spacing: 2px; }
+  .wrap { max-width: 600px; margin: 0 auto; padding: 24px 16px 60px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 24px 20px; text-align: center; box-shadow: 0 6px 24px -18px #12152855; }
+  .card + .card { margin-top: 16px; }
+  .big { font-size: 54px; line-height: 1; }
+  h1 { margin: 12px 0 6px; font-size: clamp(22px, 4vw, 28px); }
+  p { margin: 0 auto; max-width: 440px; color: var(--mist); }
+  .spin { width: 42px; height: 42px; margin: 4px auto 0; border-radius: 50%; border: 4px solid var(--line); border-top-color: var(--sky); animation: s 1s linear infinite; } @keyframes s { to { transform: rotate(360deg); } }
+  .dl { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 360px; margin: 18px auto 0; border-radius: 14px; padding: 16px; font: 800 17px 'Plus Jakarta Sans', sans-serif; color: #fff; background: var(--green); text-decoration: none; box-shadow: 0 10px 24px -10px #3FB60FAA; }
+  .dl:hover { background: var(--green-d); }
+  ol { text-align: left; margin: 18px auto 0; max-width: 420px; padding-left: 22px; display: grid; gap: 8px; }
+  ol b { color: var(--ink); }
+  .hide { display: none !important; }
+  h2 { margin: 0 0 6px; font-size: 17px; }
+  form { display: flex; gap: 8px; max-width: 420px; margin: 12px auto 0; }
+  input { flex: 1; min-width: 0; padding: 12px 13px; border: 1.5px solid var(--line); border-radius: 11px; font: inherit; font-size: 16px; }
+  input:focus { outline: none; border-color: var(--sky); }
+  button { border: 0; border-radius: 11px; padding: 0 16px; font: 700 14px 'Plus Jakarta Sans', sans-serif; color: #fff; background: var(--ink); cursor: pointer; }
+  .msg { min-height: 20px; margin-top: 10px; font-size: 14px; font-weight: 600; }
+  .msg.err { color: #C2412D; } .msg a { color: var(--green-d); }
+  .help { margin-top: 18px; text-align: center; font-size: 13.5px; color: var(--mist); }
+  @media (max-width: 420px) { form { flex-direction: column; } button { padding: 12px; } }
+</style>
+</head>
+<body>
+<div class="top"><div class="in"><i>• •</i>Kobi</div></div>
+<div class="wrap">
+
+  <div class="card" id="wait">
+    <div class="spin"></div>
+    <h1>Confirmando o seu pagamento…</h1>
+    <p>No PIX isso leva alguns segundos (às vezes 1 minuto). Deixe esta página aberta: o botão para baixar aparece aqui sozinho.</p>
+  </div>
+
+  <div class="card hide" id="paid">
+    <div class="big">🎉</div>
+    <h1>Pagamento aprovado! O Kobi é seu.</h1>
+    <p id="paidTxt">Agora é só baixar e ativar com o e-mail da compra.</p>
+    <a class="dl" id="dl" href="#">⬇ Baixar o Kobi</a>
+    <ol>
+      <li><b>Baixe e instale</b> pelo botão acima (Windows, Mac ou Linux).</li>
+      <li><b>Abra o Kobi</b> e, quando ele pedir, digite <b>o mesmo e-mail da compra</b>.</li>
+      <li id="vozStep" class="hide"><b>A voz do J.A.R.V.I.S.</b> já entra nos seus créditos: escolha o cartão J.A.R.V.I.S. na tela de Voz.</li>
+    </ol>
+    <p style="margin-top:14px;font-size:13.5px">Guarde esta página. Se perder o link, é só voltar aqui e usar o "Já comprei" com o seu e-mail.</p>
+  </div>
+
+  <div class="card hide" id="nope">
+    <div class="big">🤔</div>
+    <h1>O pagamento ainda não apareceu</h1>
+    <p>Se você pagou com PIX, pode levar mais um pouco. Se o pagamento foi recusado, você pode <a href="comprar.html">tentar de novo</a>.</p>
+  </div>
+
+  <div class="card">
+    <h2>Já comprei e quero o link de novo</h2>
+    <p>Digite o e-mail que você usou na compra.</p>
+    <form id="ac"><input id="acEmail" type="email" autocomplete="email" placeholder="voce@email.com" required><button type="submit">Ver meu acesso</button></form>
+    <div class="msg" id="acMsg" role="status"></div>
+  </div>
+
+  <div class="help">Precisa de ajuda? Fale com a gente no Instagram <b>@kobi.ia</b>.</div>
+</div>
+
+<script>
+(function () {
+  var API = 'https://kobi-licencas.hiagorzandonadi.workers.dev';
+  var $ = function (id) { return document.getElementById(id); };
+  var ref = new URLSearchParams(location.search).get('ref') || '';
+  function show(id) { ['wait', 'paid', 'nope'].forEach(function (x) { $(x).classList.toggle('hide', x !== id); }); }
+  if (!/^kobi_[0-9a-f]{16}_[a-z0-9-]{1,20}$/.test(ref)) { $('wait').classList.add('hide'); return wireAcesso(); }
+  var t0 = Date.now();
+  (function poll() {
+    fetch(API + '/kobi/status?ref=' + encodeURIComponent(ref), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
+      if (j && j.pago) {
+        $('dl').href = j.baixar; $('paidTxt').textContent = 'Agora é só baixar e ativar com o e-mail da compra (' + j.email + ').';
+        if (j.voz) $('vozStep').classList.remove('hide');
+        return show('paid');
+      }
+      if (Date.now() - t0 > 10 * 60000) return show('nope');
+      setTimeout(poll, 4000);
+    }).catch(function () { setTimeout(poll, 6000); });
+  })();
+  wireAcesso();
+  function wireAcesso() {
+    $('ac').addEventListener('submit', function (e) {
+      e.preventDefault(); var m = $('acMsg'); m.className = 'msg'; m.textContent = 'Procurando…';
+      fetch(API + '/kobi/acesso', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email: $('acEmail').value }) })
+        .then(function (r) { return r.json(); }).then(function (j) {
+          if (j && j.baixar) { m.innerHTML = '✅ Achei sua compra! <a href="' + j.baixar + '">Clique aqui para baixar o Kobi</a> e ative com esse e-mail.'; return; }
+          m.className = 'msg err';
+          m.textContent = j && j.error === 'wait' ? 'Muitas tentativas. Espere alguns minutos.' : 'Não achei uma compra com esse e-mail. Confira se digitou certo, ou se o pagamento ainda está sendo confirmado.';
+        }).catch(function () { m.className = 'msg err'; m.textContent = 'Sem conexão. Tente de novo.'; });
+    });
+  }
+})();
+</script>
+</body>
+</html>

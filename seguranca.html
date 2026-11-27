@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Segurança e privacidade · Kobi</title>
+<meta name="description" content="Como o Kobi protege seus dados, suas chaves e sua licença.">
+<style>
+  :root { --bg:#0b0d12; --card:#12151c; --line:#232a37; --tx:#eef1f6; --mut:#9aa4b5; --ok:#3ddc97; --warn:#ffb86b; }
+  @media (prefers-color-scheme: light) { :root { --bg:#f6f7f9; --card:#fff; --line:#e3e6ec; --tx:#141821; --mut:#5b6474; --ok:#0f9d63; --warn:#b5650d; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--tx); font:16px/1.65 "Segoe UI", system-ui, -apple-system, sans-serif; }
+  main { max-width: 820px; margin: 0 auto; padding: 48px 16px 80px; }
+  a { color: var(--ok); }
+  .top { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:28px; }
+  .top a.back { text-decoration:none; font-weight:600; }
+  h1 { font-size: clamp(28px, 6vw, 40px); line-height:1.15; margin:0 0 10px; }
+  .lead { color:var(--mut); font-size:18px; margin:0 0 30px; }
+  .upd { color:var(--mut); font-size:13.5px; }
+  h2 { font-size:21px; margin:38px 0 12px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px 20px; margin:12px 0; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(230px,1fr)); gap:12px; }
+  .grid .card { margin:0; }
+  .card b { display:block; margin-bottom:4px; }
+  .card p { margin:0; color:var(--mut); font-size:15px; }
+  ul { padding-left:20px; } li { margin:6px 0; }
+  table { width:100%; border-collapse:collapse; font-size:15px; }
+  th, td { text-align:left; padding:10px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { color:var(--mut); font-weight:600; font-size:13.5px; }
+  .tbl { overflow-x:auto; }
+  .note { border-left:3px solid var(--warn); }
+  .ok { color:var(--ok); font-weight:700; }
+  footer { margin-top:48px; color:var(--mut); font-size:14px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="top"><a class="back" href="./">← Kobi</a><span class="upd">Atualizado em 15/11/2026</span></div>
+
+  <h1>Segurança e privacidade do Kobi</h1>
+  <p class="lead">O Kobi roda no seu computador. Seus dados ficam com você, e o que sai do seu PC é só o que precisa sair para cada função funcionar.</p>
+
+  <div class="grid">
+    <div class="card"><b>🖥️ Tudo local</b><p>Tarefas, lembretes, notas, memórias e conversas ficam salvos no seu computador, não em servidor nosso.</p></div>
+    <div class="card"><b>🔐 Chaves criptografadas</b><p>Suas chaves de IA e a senha de app do e-mail são guardadas com a criptografia do próprio Windows ou macOS.</p></div>
+    <div class="card"><b>📵 Sem rastreamento</b><p>O app não tem analytics, não envia estatísticas de uso e não vende dados.</p></div>
+    <div class="card"><b>🎟️ Licença protegida</b><p>Ative com o e-mail da compra (vale em até 2 computadores) ou com a chave da página de download. Reembolso cancela o acesso.</p></div>
+  </div>
+
+  <h2>O que fica no seu computador</h2>
+  <ul>
+    <li>Configurações, tarefas, lembretes, notas, rotinas, contatos e memórias do Kobi.</li>
+    <li>Histórico de conversa com o Kobi.</li>
+    <li>Chaves de IA (Groq, Gemini, OpenAI) e senha de app do e-mail, <b>criptografadas</b> pelo sistema operacional.</li>
+  </ul>
+  <p>Nós não temos acesso a nada disso. Se você desinstalar o Kobi e apagar a pasta dele, esses dados somem.</p>
+
+  <h2>O que sai do seu computador (e para onde)</h2>
+  <div class="tbl"><table>
+    <tr><th>Quando</th><th>O que é enviado</th><th>Para quem</th></tr>
+    <tr><td>Você conversa com o Kobi usando IA na nuvem</td><td>A sua mensagem e o contexto necessário para responder</td><td>O provedor que <b>você</b> escolheu e configurou com a <b>sua</b> chave (Groq, Google Gemini ou OpenAI). Com a IA local (Ollama), nada sai do PC.</td></tr>
+    <tr><td>Você fala com o Kobi e ligou o reconhecimento na nuvem</td><td>O áudio do comando de voz</td><td>Groq ou OpenAI, com a sua chave</td></tr>
+    <tr><td>Clima, cotações, notícias, tradução, pesquisa</td><td>Só o termo pedido (ex.: a cidade, a frase a traduzir)</td><td>Serviços públicos dessas informações (Open-Meteo, AwesomeAPI, Google Notícias/Tradutor, DuckDuckGo)</td></tr>
+    <tr><td>Você conecta e-mail ou agenda</td><td>Login no seu provedor; o Kobi só <b>lê</b> (não envia nem apaga e-mails)</td><td>O seu próprio provedor (Gmail, Outlook, iCloud, Google Agenda)</td></tr>
+    <tr><td>Ativação e conferência da licença</td><td>E-mail da compra, código da chave e um código do computador (hash, não dá para descobrir o PC a partir dele)</td><td>Servidor de licenças do Kobi</td></tr>
+    <tr><td>Procurar atualização</td><td>Nada pessoal: só baixa o arquivo de versão</td><td>GitHub</td></tr>
+  </table></div>
+
+  <h2>Pagamento</h2>
+  <p>O pagamento é feito na <b>Cakto</b>. Nós não vemos nem guardamos número de cartão. O que recebemos da compra é o e-mail, usado para liberar e conferir a sua licença.</p>
+
+  <h2>Licença e proteção contra cópia</h2>
+  <ul>
+    <li>As chaves são <b>assinadas digitalmente</b> (Ed25519). Só o Kobi consegue gerar chaves válidas; a chave de assinatura não fica em nenhum servidor público.</li>
+    <li>Ativando pelo e-mail, a licença fica presa a <b>até 2 computadores</b>. Se alguém descobrir seu e-mail, não consegue usar a sua compra em outros PCs.</li>
+    <li>A chave da página de download pode ser <b>desligada a qualquer momento</b> se vazar; quem comprou continua ativando com o e-mail.</li>
+    <li>Tentativas de ativação são limitadas, para impedir que alguém fique testando e-mails.</li>
+    <li>Reembolso ou chargeback cancelam a chave automaticamente.</li>
+    <li>Trocou de computador? Fale com a gente no Instagram e liberamos a vaga.</li>
+  </ul>
+
+  <h2>Ações no seu computador</h2>
+  <ul>
+    <li>Funções que mexem no PC (abrir apps, controlar a tela, desligar, mandar WhatsApp, limpar arquivos) dependem de permissões que você liga ou desliga no painel do Kobi.</li>
+    <li>Se o Kobi acabou de ler conteúdo de fora (uma página da web, um e-mail, a área de transferência), ele <b>bloqueia</b> ações perigosas logo em seguida. Isso evita que um texto malicioso “mande” o Kobi fazer algo por você.</li>
+    <li>O acesso pelo celular só funciona na sua rede Wi-Fi e com o código do QR Code gerado no seu Kobi.</li>
+  </ul>
+
+  <h2>Transparência: o que corrigimos</h2>
+  <div class="card note">
+    <p>Em 15/11/2026 um usuário nos avisou que a chave de ativação usada no lançamento estava visível num repositório público. <b>Nenhum dado de cliente, senha ou chave de IA foi exposto</b>, só a chave de ativação. No mesmo dia desativamos a chave antiga, criamos a ativação pelo e-mail da compra (presa a até 2 computadores) e passamos a poder desligar qualquer chave na hora. Quem comprou ativa normalmente. Obrigado a quem avisou.</p>
+  </div>
+
+  <h2>O que ainda estamos melhorando</h2>
+  <ul>
+    <li>Assinatura digital das atualizações, para o Kobi conferir que cada versão baixada é nossa.</li>
+    <li>Confirmação na tela antes de qualquer ação irreversível.</li>
+    <li>Conexão do celular só por HTTPS.</li>
+  </ul>
+
+  <h2>Seus direitos (LGPD)</h2>
+  <p>Você pode pedir a qualquer momento para ver, corrigir ou apagar os dados da sua compra que guardamos (e-mail e licença). Os dados que ficam no seu computador você mesmo controla e pode apagar.</p>
+
+  <h2>Achou um problema de segurança?</h2>
+  <p>Fale com a gente no Instagram <a href="https://instagram.com/kobi.ia">@kobi.ia</a>. Respondemos e corrigimos o quanto antes, e agradecemos quem avisar com responsabilidade.</p>
+
+  <footer>Kobi · Assistente no topo da tela</footer>
+</main>
+</body>
+</html>

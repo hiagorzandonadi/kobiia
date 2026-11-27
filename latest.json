@@ -1,0 +1,18 @@
+{
+  "version": "4.9.23",
+  "date": "2026-11-22",
+  "url": "https://github.com/hiagorzandonadi/kobi/releases/download/v4.9.23/Kobi-Setup.exe",
+  "macVersion": "4.9.23",
+  "urlMacArm64": "https://github.com/hiagorzandonadi/kobi/releases/download/v4.9.23/Kobi-Mac-arm64.dmg",
+  "urlMacX64": "https://github.com/hiagorzandonadi/kobi/releases/download/v4.9.23/Kobi-Mac-x64.dmg",
+  "page": "https://hiagorzandonadi.github.io/kobi/",
+  "linuxVersion": "4.9.23",
+  "urlLinux": "https://github.com/hiagorzandonadi/kobi/releases/download/v4.9.23/Kobi-Linux.AppImage",
+  "notes": [
+    "Muito mais rápido: o Kobi responde perguntas em 2 a 3 segundos, com respostas faladas curtas e diretas, e só pesquisa na internet quando a pergunta precisa.",
+    "Mais esperto: acabaram as respostas sem nada a ver. Placar de futebol na hora (\"qual o resultado do jogo do Flamengo?\").",
+    "Gravar meu chamado (Voz): grave do jeito que você chama e ele passa a reconhecer a sua voz. E o nome do assistente está liberado de novo (Meu Kobi → Nome).",
+    "Para quem tem a voz do J.A.R.V.I.S.: novo entalho J.A.R.V.I.S. com ondas de voz, chamar também de \"Jarvis\" e interromper a rotina cancela tudo.",
+    "Correções: a rotina não mexe mais no volume do Windows, o teclado não dispara mais as palmas, o WhatsApp continua conectado depois de reiniciar o PC, a atualização tenta de novo se a internet cair e os avisos chegam no sininho do entalho."
+  ]
+}
