@@ -335,6 +335,8 @@
 <script>
 (function(){
   var FASES = [{ate:'2026-11-27T10:00:00-03:00',mostra:'2026-11-27T10:00:00-03:00',cupom:'BLACK30',pct:30,preco:'62,90',sub:'SÓ ATÉ AMANHÃ 10H'}];
+  var CQ = (new URLSearchParams(location.search).get('cupom') || '').trim().toUpperCase();
+  if (/^SEGUIU(35)?$/.test(CQ)) FASES = [{ate:'2026-11-27T15:00:00-03:00',mostra:'2026-11-27T15:00:00-03:00',cupom:CQ,pct:44,preco:'50,00',sub:'PREÇO DE SEGUIDOR 🖤',tag:'SEGUIDOR',go:'🖤 Garantir meu preço de seguidor'}];
   var el = document.getElementById('promo12');
   var F = FASES.filter(function(f){ return Date.now() < Date.parse(f.ate); })[0];
   if (!el || !F) { if (el) el.remove(); return; }
@@ -347,6 +349,7 @@
   document.getElementById('bfPreco').textContent = 'R$ ' + F.preco;
   document.getElementById('bfSub').textContent = F.sub;
   el.hidden = false;
+  if (F.go) { var g0 = document.getElementById('promo12go'); if (g0) g0.textContent = F.go; }
   var go = document.getElementById('promo12go'); if (go) go.href = 'comprar.html' + location.search;
   function tick(){
     var s = Math.max(0, Math.floor((FIM - Date.now()) / 1000));
@@ -358,7 +361,7 @@
   function botoes(){
     [].forEach.call(document.querySelectorAll('[data-buy]'), function(b){
       if (b.classList.contains('bf-btn')) return;
-      b.classList.add('bf-btn'); b.setAttribute('data-bf', '-' + F.pct + '% BLACK');
+      b.classList.add('bf-btn'); b.setAttribute('data-bf', '-' + F.pct + '% ' + (F.tag || 'BLACK'));
       b.innerHTML = b.innerHTML.replace(/R\$ ?89,90/, '<span class="promo-old">R$ 89,90</span><span class="promo-new">R$ ' + F.preco + '</span>');
     });
   }
