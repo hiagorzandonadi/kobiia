@@ -333,7 +333,7 @@
 </div></div>
 <script>
 (function(){
-  var FASES = [{ate:'2026-11-28T15:00:00-03:00',mostra:'2026-11-28T15:00:00-03:00',cupom:'BLACK30',pct:30,preco:'62,93',sub:'SÓ ATÉ 28/11 ÀS 15H'}];
+  var FASES = [{ate:'2026-12-01T00:00:00-03:00',mostra:'2026-12-01T00:00:00-03:00',cupom:'BLACK30',pct:30,preco:'62,93',sub:'SÓ ATÉ 30/11'}];
   var el = document.getElementById('promo12');
   var F = FASES.filter(function(f){ return Date.now() < Date.parse(f.ate); })[0];
   if (!el || !F) { if (el) el.remove(); return; }
