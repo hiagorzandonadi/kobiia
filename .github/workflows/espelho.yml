@@ -1,5 +1,6 @@
 name: espelho-do-site
-# Copia o site de hiagorzandonadi/kobi (o link antigo continua igual) e publica em kobiia.com.br.
+# Copia o site de hiagorzandonadi/kobi (o link antigo continua igual) para o branch gh-pages,
+# que o GitHub Pages publica em kobiia.com.br.
 on:
   schedule:
     - cron: "*/10 * * * *"
@@ -7,29 +8,30 @@ on:
   push:
     branches: [main]
 permissions:
-  contents: read
-  actions: read
-  pages: write
-  id-token: write
+  contents: write
 concurrency:
-  group: pages
+  group: espelho
   cancel-in-progress: true
 jobs:
-  publicar:
+  copiar:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
     steps:
       - uses: actions/checkout@v5
         with:
           repository: hiagorzandonadi/kobi
           path: site
-      - name: Preparar
+      - name: Publicar no gh-pages se mudou
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           rm -rf site/.git site/.github
           echo "kobiia.com.br" > site/CNAME
           touch site/.nojekyll
-      - uses: actions/upload-pages-artifact@v5
-        with:
-          path: site
-      - uses: actions/deploy-pages@v5
+          git clone --depth 1 --branch gh-pages "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" pub || (mkdir pub && cd pub && git init -b gh-pages && git remote add origin "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git")
+          cd pub
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a ../site/. .
+          git add -A
+          if git diff --cached --quiet; then echo "sem mudancas"; exit 0; fi
+          git -c user.name="espelho" -c user.email="actions@users.noreply.github.com" commit -q -m "espelho $(date -u +%FT%TZ)"
+          git push -q origin gh-pages
