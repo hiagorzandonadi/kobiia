@@ -1,22 +1,16 @@
 {
-  "version": "4.9.24",
+  "version": "4.9.25",
   "date": "2026-11-27",
-  "url": "https://github.com/hiagorzandonadi/kobi/releases/download/v4.9.24/Kobi-Setup.exe",
-  "macVersion": "4.9.24",
-  "urlMacArm64": "https://github.com/hiagorzandonadi/kobi/releases/download/v4.9.24/Kobi-Mac-arm64.dmg",
-  "urlMacX64": "https://github.com/hiagorzandonadi/kobi/releases/download/v4.9.24/Kobi-Mac-x64.dmg",
+  "url": "https://github.com/hiagorzandonadi/kobi/releases/download/v4.9.25/Kobi-Setup.exe",
+  "macVersion": "4.9.25",
+  "urlMacArm64": "https://github.com/hiagorzandonadi/kobi/releases/download/v4.9.25/Kobi-Mac-arm64.dmg",
+  "urlMacX64": "https://github.com/hiagorzandonadi/kobi/releases/download/v4.9.25/Kobi-Mac-x64.dmg",
   "page": "https://hiagorzandonadi.github.io/kobi/",
-  "linuxVersion": "4.9.24",
-  "urlLinux": "https://github.com/hiagorzandonadi/kobi/releases/download/v4.9.24/Kobi-Linux.AppImage",
+  "linuxVersion": "4.9.25",
+  "urlLinux": "https://github.com/hiagorzandonadi/kobi/releases/download/v4.9.25/Kobi-Linux.AppImage",
   "notes": [
-    "Otimizar PC novo: depois de verificar, escolha entre Otimização básica, completa, 🔥 Pro Max ou fazer manualmente. Tudo com animação mostrando cada passo, cronômetro e um relatório de antes → depois no final.",
-    "🔥 Otimização Pro Max: plano de energia Desempenho máximo, janelas sem animação, Modo de jogo, prioridade para jogos e rede, menus mais rápidos e menos coisa rodando em segundo plano. Dá para desfazer tudo com um clique.",
-    "Otimização completa: atualiza os drivers (pelo Windows Update) e os componentes do Windows (Visual C++, .NET, DirectX), mostrando a porcentagem do download.",
-    "Limpar e Liberar memória agora mostram a limpeza acontecendo e o resultado no final.",
-    "Entalho branco: agora dá para escolher a cor do entalho, preto ou branco (Entalho → Cor do entalho).",
-    "Entalho no canto: coloque o Kobi no canto esquerdo ou direito da tela, escondidinho até você encostar o mouse.",
-    "Barra flutuante: o Kobi conversa com a barra e abre direto no menu dela.",
-    "Widgets: ajuste do tamanho das letras e lista de tarefas maior.",
-    "Correções: o entalho e os widgets não travam mais a animação depois de um jogo em tela cheia; a notificação fica do tamanho da mensagem; o entalho fecha sozinho quando o mouse sai; a voz do J.A.R.V.I.S. não troca mais pela voz padrão à toa nem corta no meio; a atualização instala sozinha e o Kobi reabre; as configurações não se perdem se o PC desligar na hora errada; o Kobi acha o Ollama instalado em outra pasta."
+    "Baixar vídeos do Instagram: arraste um Reels ou post para o entalho e ele vira MP4 na gaveta (ou só a música)",
+    "Copiou um link do YouTube ou do Instagram? Em Copiados aparece \"Link copiado · Deseja baixar o vídeo?\"",
+    "Os links de vídeo na lista de Copiados ganharam o botão Baixar"
   ]
 }
